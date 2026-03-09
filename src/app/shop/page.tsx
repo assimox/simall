@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import styles from './page.module.css';
 import { getProducts, Product } from '@/lib/db';
 import Link from 'next/link';
@@ -12,9 +13,10 @@ const collections = [
 ];
 
 export default function Shop() {
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category'));
 
   useEffect(() => {
     async function load() {

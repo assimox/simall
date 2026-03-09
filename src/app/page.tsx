@@ -30,28 +30,28 @@ export default function Home() {
          </div>
          <div className={styles.grid}>
            {/* Old Money Aesthetic */}
-           <div className={styles.card}>
+           <Link href="/shop?category=oldmoney" className={styles.card}>
              <div className={styles.cardImageHolder} style={{ backgroundImage: "url('/images/old-money.jpg.png')" }}></div>
              <h4 className={styles.cardTitle}>{t.home.oldMoney}</h4>
-           </div>
+           </Link>
            
            {/* Streetwear Aesthetic */}
-           <div className={styles.card}>
+           <Link href="/shop?category=streetwear" className={styles.card}>
              <div className={styles.cardImageHolder} style={{ backgroundImage: "url('/images/streetwear.jpg.png')" }}></div>
              <h4 className={styles.cardTitle}>{t.home.streetWear}</h4>
-           </div>
+           </Link>
            
            {/* Vintage / Accesories */}
-           <div className={styles.card}>
+           <Link href="/shop?category=accessories" className={styles.card}>
              <div className={styles.cardImageHolder} style={{ backgroundImage: "url('/images/accessories.jpg.png')" }}></div>
              <h4 className={styles.cardTitle}>{t.home.accessories}</h4>
-           </div>
+           </Link>
            
            {/* Shoes */}
-           <div className={styles.card}>
+           <Link href="/shop?category=shoes" className={styles.card}>
              <div className={styles.cardImageHolder} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop')" }}></div>
              <h4 className={styles.cardTitle}>{t.home.shoes}</h4>
-           </div>
+           </Link>
          </div>
       </section>
       
