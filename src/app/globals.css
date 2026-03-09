@@ -63,6 +63,11 @@ a:hover {
 }
 
 .top-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 200;
   background-color: var(--foreground);
   color: var(--background);
   font-family: var(--font-inter);
