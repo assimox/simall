@@ -1,0 +1,258 @@
+.adminContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--muted);
+}
+
+.sidebar {
+  width: 250px;
+  background-color: var(--background);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebarHeader {
+  padding: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebarHeader h2 {
+  font-family: var(--font-inter);
+  letter-spacing: 2px;
+  font-size: 1.2rem;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
+}
+
+.sidebarNav a {
+  padding: 1rem 2rem;
+  font-family: var(--font-inter);
+  font-size: 0.95rem;
+  transition: all var(--transition-fast);
+}
+
+.sidebarNav a:hover {
+  background-color: var(--muted);
+}
+
+.storefrontLink {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  color: var(--muted-text);
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  height: 70px;
+  background-color: var(--background);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.topbarRight {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-family: var(--font-inter);
+  font-size: 0.9rem;
+}
+
+.contentPad {
+  padding: 3rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.pageHeader h1 {
+  font-family: var(--font-inter);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.emptyTable {
+  padding: 4rem;
+  text-align: center;
+  background: var(--background);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--muted-text);
+}
+
+.tableWrapper {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 1.2rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-inter);
+}
+
+.table th {
+  background-color: var(--muted);
+  font-weight: 500;
+  color: var(--muted-text);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tableImage {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.mutedId {
+  color: var(--muted-text);
+  font-size: 0.85rem;
+}
+
+.actionLink {
+  color: #0066cc;
+  font-size: 0.9rem;
+}
+
+.actionLink:hover {
+  text-decoration: underline;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.statusBadge[data-status="pending"] {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.statusBadge[data-status="completed"] {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+/* Form Styles */
+.formCard {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3rem;
+  max-width: 800px;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.formGroup label {
+  font-family: var(--font-inter);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.input {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  font-family: var(--font-inter);
+  font-size: 1rem;
+  outline: none;
+  background: var(--background);
+  color: var(--foreground);
+  transition: border-color var(--transition-fast);
+}
+
+.input:focus {
+  border-color: var(--foreground);
+}
+
+.textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.helpText {
+  font-size: 0.85rem;
+  color: var(--muted-text);
+  font-family: var(--font-inter);
+}
+
+.formActions {
+  margin-top: 3rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-family: var(--font-inter);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+
+.deleteBtn:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+.statusActionBtn {
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.statusActionBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

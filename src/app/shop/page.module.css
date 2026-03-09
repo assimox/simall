@@ -1,0 +1,92 @@
+.main {
+  min-height: 100vh;
+  padding-top: 100px;
+}
+
+.shopHeader {
+  text-align: center;
+  padding: 6rem 5%;
+  background-color: var(--muted);
+  margin-bottom: 4rem;
+}
+
+.shopHeader h1 {
+  font-size: 4rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.shopHeader p {
+  font-size: 1.1rem;
+  font-family: var(--font-inter);
+  color: var(--muted-text);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.shopContainer {
+  padding-bottom: 8rem;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 5rem 0;
+  color: var(--muted-text);
+}
+
+.emptyState h2 {
+  font-size: 2rem;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--foreground);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 3rem 2rem;
+}
+
+.productCard {
+  display: block;
+}
+
+.productCard:hover .imageBox {
+  transform: scale(1.02);
+}
+
+.imageBox {
+  height: 400px;
+  background-color: var(--muted);
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 1.5rem;
+  transition: transform var(--transition-slow);
+}
+
+.productInfo h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.price {
+  font-family: var(--font-inter);
+  color: var(--muted-text);
+  font-size: 0.95rem;
+}

@@ -1,0 +1,99 @@
+.main {
+  min-height: 100vh;
+  padding: 120px 0 8rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--foreground);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 100px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .productGrid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+.imageCol {
+  width: 100%;
+}
+
+.productImage {
+  width: 100%;
+  height: auto;
+  min-height: 600px;
+  object-fit: cover;
+  background-color: var(--muted);
+}
+
+.infoCol {
+  padding-top: 2rem;
+}
+
+.title {
+  font-family: var(--font-playfair);
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  letter-spacing: -1px;
+}
+
+.price {
+  font-family: var(--font-inter);
+  font-size: 1.5rem;
+  color: var(--muted-text);
+  margin-bottom: 2.5rem;
+}
+
+.description {
+  font-family: var(--font-inter);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--foreground);
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 3rem;
+  white-space: pre-wrap;
+}
+
+.addToCartBtn {
+  width: 100%;
+  padding: 1.2rem;
+  font-size: 1rem;
+  margin-bottom: 3rem;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.detailItem h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.detailItem p {
+  font-family: var(--font-inter);
+  font-size: 0.9rem;
+  color: var(--muted-text);
+}

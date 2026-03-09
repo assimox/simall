@@ -1,0 +1,148 @@
+:root {
+  --background: #ffffff; /* Crisp White */
+  --foreground: #041e3a; /* RL Deep Navy */
+  --accent: #f4f4f4; /* Off-white for sections */
+  --accent-foreground: #000000; /* Crisp Black */
+  --border: #e5e5e5; /* Very subtle grey border */
+  --muted: #f9f9f9; /* Soft background */
+  --muted-text: #666666; /* Medium grey for secondary text */
+  --gold-accent: #041e3a; /* Re-purposing gold to Navy for this theme to keep it monochrome/clean */
+  --transition-fast: 0.2s ease-in-out;
+  --transition-slow: 0.4s ease-in-out;
+}
+
+@media (prefers-color-scheme: light) {
+  /* Enforce white/navy theme globally */
+  :root {
+    --background: #ffffff;
+    --foreground: #041e3a;
+    --accent: #f4f4f4;
+    --accent-foreground: #000000;
+    --border: #e5e5e5;
+    --muted: #f9f9f9;
+    --muted-text: #666666;
+    --gold-accent: #041e3a;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair), serif;
+  font-weight: 400;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+
+a:hover {
+  opacity: 0.7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Base UI Components */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 5%;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--foreground);
+  color: var(--background);
+  padding: 1rem 3rem;
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border: 1px solid var(--foreground);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--foreground);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--foreground);
+  padding: 1rem 3rem;
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border: 1px solid var(--foreground);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+/* Decorative utilities */
+.gold-text {
+  color: var(--foreground); /* Mapped to Navy for RL */
+}
+.decorative-line {
+  height: 1px;
+  width: 40px;
+  background-color: var(--foreground);
+  margin: 1.5rem auto;
+}
+
+/* Micro animations */
+.fade-in-up {
+  animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.glass-panel {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

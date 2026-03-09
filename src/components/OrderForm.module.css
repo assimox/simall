@@ -1,0 +1,69 @@
+.formContainer {
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  padding: 2.5rem;
+  margin-top: 2rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-playfair);
+}
+
+.subtitle {
+  color: var(--muted-text);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputGroup label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.input {
+  background-color: transparent;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  padding: 1rem;
+  font-size: 0.95rem;
+  font-family: var(--font-inter);
+  transition: border-color var(--transition-fast);
+  border-radius: 9999px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--foreground);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.submitBtn {
+  width: 100%;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
