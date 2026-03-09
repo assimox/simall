@@ -5,10 +5,10 @@ import { getProducts, Product } from '@/lib/db';
 import Link from 'next/link';
 
 const collections = [
-  { id: 'oldmoney', title: 'Old Money', image: 'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=800&q=80' },
-  { id: 'streetwear', title: 'Street Wear', image: 'https://images.unsplash.com/photo-1523398002811-999aa8d087ea?w=800&q=80' },
-  { id: 'accessories', title: 'Accessories', image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80' },
-  { id: 'shoes', title: 'Shoes', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80' }
+  { id: 'oldmoney', title: 'Old Money', image: '/images/old-money.jpg.png' },
+  { id: 'streetwear', title: 'Street Wear', image: '/images/streetwear.jpg.png' },
+  { id: 'accessories', title: 'Accessories', image: '/images/accessories.jpg.png' },
+  { id: 'shoes', title: 'Shoes', image: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop' }
 ];
 
 export default function Shop() {
