@@ -155,6 +155,13 @@
   .navLinks {
     display: none;
   }
+  .navActions {
+    gap: 0.5rem;
+    font-size: 0.7rem;
+  }
+  .langBtn {
+    padding: 0.1rem 0.2rem;
+  }
 }
 
 /* ── Language Selector (always visible, no dropdown) ── */

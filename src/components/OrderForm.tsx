@@ -9,11 +9,12 @@ import { db } from '@/lib/firebase';
 type OrderFormProps = {
   productId: string;
   productName: string;
+  quantity: number;
   onSuccess: () => void;
   onCancel: () => void;
 };
 
-export default function OrderForm({ productId, productName, onSuccess, onCancel }: OrderFormProps) {
+export default function OrderForm({ productId, productName, quantity, onSuccess, onCancel }: OrderFormProps) {
   const { t } = useLanguage();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -30,6 +31,7 @@ export default function OrderForm({ productId, productName, onSuccess, onCancel 
       await addDoc(collection(db, 'orders'), {
         productId,
         productName,
+        quantity,
         customerName: name,
         phone,
         address,

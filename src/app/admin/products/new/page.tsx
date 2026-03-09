@@ -12,7 +12,8 @@ export default function AddProduct() {
     description: '',
     price: '',
     imageUrl: '',
-    category: ''
+    category: '',
+    stock: ''
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,7 +25,8 @@ export default function AddProduct() {
         description: formData.description,
         price: parseFloat(formData.price),
         imageUrl: formData.imageUrl,
-        category: formData.category
+        category: formData.category,
+        stock: parseInt(formData.stock) || 0
       });
       router.push('/admin');
     } catch (error) {
@@ -65,6 +67,18 @@ export default function AddProduct() {
               value={formData.price}
               onChange={e => setFormData({...formData, price: e.target.value})}
               placeholder="e.g. 129.00"
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Stock Quantity</label>
+            <input 
+              type="number" 
+              className={styles.input} 
+              required
+              value={formData.stock}
+              onChange={e => setFormData({...formData, stock: e.target.value})}
+              placeholder="e.g. 50"
             />
           </div>
 

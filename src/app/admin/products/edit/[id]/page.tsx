@@ -14,7 +14,8 @@ export default function EditProduct() {
     description: '',
     price: '',
     imageUrl: '',
-    category: ''
+    category: '',
+    stock: ''
   });
 
   useEffect(() => {
@@ -27,6 +28,7 @@ export default function EditProduct() {
         price: String(product.price),
         imageUrl: product.imageUrl,
         category: product.category || '',
+        stock: String(product.stock || 0),
       });
       setLoading(false);
     });
@@ -42,6 +44,7 @@ export default function EditProduct() {
         price: parseFloat(formData.price),
         imageUrl: formData.imageUrl,
         category: formData.category,
+        stock: parseInt(formData.stock) || 0,
       });
       router.push('/admin');
     } catch {
@@ -81,6 +84,17 @@ export default function EditProduct() {
               required
               value={formData.price}
               onChange={e => setFormData({ ...formData, price: e.target.value })}
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Stock Quantity</label>
+            <input
+              type="number"
+              className={styles.input}
+              required
+              value={formData.stock}
+              onChange={e => setFormData({ ...formData, stock: e.target.value })}
             />
           </div>
 

@@ -8,6 +8,7 @@ export interface Product {
   price: number;
   imageUrl: string;
   category?: string;
+  stock?: number;
   createdAt?: any;
 }
 
@@ -15,6 +16,7 @@ export interface Order {
   id?: string;
   productId: string;
   productName: string;
+  quantity?: number;
   customerName: string;
   phone: string;
   address: string;
@@ -105,7 +107,37 @@ export async function updateOrderStatus(
   status: 'pending' | 'confirmed' | 'retour' | 'canceled'
 ) {
   try {
-    await updateDoc(doc(db, "orders", id), { status });
+    const orderRef = doc(db, "orders", id);
+    const orderSnap = await getDoc(orderRef);
+    
+    if (orderSnap.exists()) {
+      const order = orderSnap.data() as Order;
+      
+      // If confirming a non-confirmed order, deduct stock
+      if (status === 'confirmed' && order.status !== 'confirmed') {
+        const productRef = doc(db, "products", order.productId);
+        const productSnap = await getDoc(productRef);
+        if (productSnap.exists()) {
+          const productData = productSnap.data() as Product;
+          const currentStock = productData.stock || 0;
+          const qty = order.quantity || 1;
+          await updateDoc(productRef, { stock: Math.max(0, currentStock - qty) });
+        }
+      } 
+      // If un-confirming an order, restore stock
+      else if (order.status === 'confirmed' && status !== 'confirmed') {
+        const productRef = doc(db, "products", order.productId);
+        const productSnap = await getDoc(productRef);
+        if (productSnap.exists()) {
+          const productData = productSnap.data() as Product;
+          const currentStock = productData.stock || 0;
+          const qty = order.quantity || 1;
+          await updateDoc(productRef, { stock: currentStock + qty });
+        }
+      }
+    }
+
+    await updateDoc(orderRef, { status });
   } catch (error) {
     console.error("Error updating order status", error);
     throw error;

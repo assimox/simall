@@ -13,6 +13,7 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     async function load() {
@@ -61,19 +62,48 @@ export default function ProductDetail() {
                <p>{product.description}</p>
              </div>
              
+             <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+               <span style={{ fontWeight: 500, fontFamily: 'var(--font-inter)', fontSize: '0.9rem' }}>QUANTITY</span>
+               <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--border)', borderRadius: '9999px', overflow: 'hidden' }}>
+                 <button 
+                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                   style={{ padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer' }}
+                 >-</button>
+                 <span style={{ padding: '0 1rem', fontFamily: 'var(--font-inter)', fontWeight: 500 }}>{quantity}</span>
+                 <button 
+                   onClick={() => setQuantity(Math.min(product.stock || 0, quantity + 1))}
+                   style={{ padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer' }}
+                 >+</button>
+               </div>
+               <span style={{ fontSize: '0.8rem', color: 'var(--muted-text)', textTransform: 'uppercase' }}>
+                 {(product.stock || 0) > 0 ? `${product.stock} in stock` : 'Out of stock'}
+               </span>
+             </div>
+             
              {!showOrderForm && !orderSuccess && (
-                <button 
-                  className={`btn-primary ${styles.addToCartBtn}`} 
-                  onClick={() => setShowOrderForm(true)}
-                >
-                  {t.product.buyNow}
-                </button>
+                (product.stock || 0) > 0 ? (
+                  <button 
+                    className={`btn-primary ${styles.addToCartBtn}`} 
+                    onClick={() => setShowOrderForm(true)}
+                  >
+                    {t.product.buyNow}
+                  </button>
+                ) : (
+                  <button 
+                    className={`btn-primary ${styles.addToCartBtn}`} 
+                    disabled
+                    style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                  >
+                    SOLD OUT
+                  </button>
+                )
              )}
 
              {showOrderForm && !orderSuccess && (
                 <OrderForm 
                   productId={product.id as string} 
                   productName={product.title} 
+                  quantity={quantity}
                   onSuccess={() => setOrderSuccess(true)} 
                   onCancel={() => setShowOrderForm(false)} 
                 />

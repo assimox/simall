@@ -4,9 +4,17 @@ import styles from './page.module.css';
 import { getProducts, Product } from '@/lib/db';
 import Link from 'next/link';
 
+const collections = [
+  { id: 'oldmoney', title: 'Old Money', image: 'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=800&q=80' },
+  { id: 'streetwear', title: 'Street Wear', image: 'https://images.unsplash.com/photo-1523398002811-999aa8d087ea?w=800&q=80' },
+  { id: 'accessories', title: 'Accessories', image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80' },
+  { id: 'shoes', title: 'Shoes', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80' }
+];
+
 export default function Shop() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -19,11 +27,28 @@ export default function Shop() {
     load();
   }, []);
 
+  const filteredProducts = selectedCategory 
+    ? products.filter(p => p.category === selectedCategory) 
+    : products;
+
+  const currentCollection = collections.find(c => c.id === selectedCategory);
+
   return (
     <main className={styles.main}>
       <header className={styles.shopHeader}>
-         <h1 className="fade-in-up">The Collection</h1>
-         <p className="fade-in-up" style={{ animationDelay: '0.2s' }}>Explore our latest arrivals, curated for you.</p>
+         <h1 className="fade-in-up">{selectedCategory ? currentCollection?.title : 'The Collections'}</h1>
+         <p className="fade-in-up" style={{ animationDelay: '0.2s' }}>
+           {selectedCategory ? 'Explore curated pieces from this collection.' : 'Discover our distinct collections.'}
+         </p>
+         {selectedCategory && (
+           <button 
+             onClick={() => setSelectedCategory(null)} 
+             className="btn-secondary" 
+             style={{ marginTop: '2rem', padding: '0.5rem 1.5rem' }}
+           >
+             ← Back to Collections
+           </button>
+         )}
       </header>
 
       <div className={`container ${styles.shopContainer}`}>
@@ -31,15 +56,26 @@ export default function Shop() {
            <div className={styles.emptyState}>
              <div className={styles.spinner}></div>
            </div>
-        ) : products.length === 0 ? (
+        ) : !selectedCategory ? (
+           <div className={styles.categoryGrid}>
+              {collections.map((col) => (
+                 <div key={col.id} className={styles.categoryCard} onClick={() => setSelectedCategory(col.id)}>
+                    <div 
+                      className={styles.categoryImage} 
+                      style={{ backgroundImage: `url(${col.image})` }}
+                    />
+                    <h3 className={styles.categoryTitle}>{col.title}</h3>
+                 </div>
+              ))}
+           </div>
+        ) : filteredProducts.length === 0 ? (
            <div className={`fade-in-up ${styles.emptyState}`}>
-             <h2>No products available yet.</h2>
-             <p>This collection is currently being curated. Please check back later.</p>
-             <Link href="/admin/products/new" className="btn-secondary" style={{ marginTop: '2rem' }}>Go to Admin</Link>
+             <h2>No products actually.</h2>
+             <p>Coming soon...</p>
            </div>
         ) : (
            <div className={styles.productGrid}>
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                  <Link href={`/product/${product.id}`} key={product.id!} className={styles.productCard}>
                     <div 
                       className={styles.imageBox} 
