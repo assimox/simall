@@ -40,6 +40,19 @@ export default function OrderForm({ productId, productName, quantity, onSuccess,
         status: 'pending',
         createdAt: serverTimestamp()
       });
+
+      // Send Telegram notification
+      try {
+        const botToken = '8717201973:AAHSbGw1LvkrL7FAaTpmMpWSYy10norSR-g';
+        const chatId = '7769220796';
+        const message = `🛒 *طلب جديد!*\n\n📦 المنتج: ${productName}\n🔢 الكمية: ${quantity}\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}, ${city} ${postalCode}`;
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'Markdown' })
+        });
+      } catch { /* Telegram error should not block order */ }
+
       setSubmitting(false);
       onSuccess();
     } catch (error) {
