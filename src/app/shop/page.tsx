@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import styles from './page.module.css';
 import { getProducts, Product } from '@/lib/db';
@@ -12,7 +12,7 @@ const collections = [
   { id: 'shoes', title: 'Shoes', image: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop' }
 ];
 
-export default function Shop() {
+function ShopContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -93,5 +93,13 @@ export default function Shop() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function Shop() {
+  return (
+    <Suspense>
+      <ShopContent />
+    </Suspense>
   );
 }
