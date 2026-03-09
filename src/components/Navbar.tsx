@@ -57,7 +57,7 @@ export default function Navbar() {
                  <button onClick={() => setLanguage('ar')} className={styles.langBtn}>AR</button>
               </div>
            </div>
-           <Link href="/admin">{t.nav.admin}</Link>
+           {/* Admin link hidden — access via /admin-assim */}
            <button className={styles.cartBtn}>{t.nav.cart} (0)</button>
         </div>
       </div>
