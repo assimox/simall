@@ -9,7 +9,7 @@ export default function Home() {
     <main className={styles.main}>
       {/* Hero Section */}
       <section className={styles.hero}>
-        <div className={styles.heroImageOverlay}></div>
+        <div className={styles.heroImageOverlay} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')" }}></div>
         <div className={styles.heroContent}>
           <h2 className={`fade-in-up ${styles.heroTitle}`}>{t.home.heroTitle}</h2>
           <div className="decorative-line fade-in-up" style={{ animationDelay: '0.1s' }}></div>
