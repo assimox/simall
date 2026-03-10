@@ -20,10 +20,8 @@ export default function OrdersDashboard() {
   const [updating, setUpdating] = useState<string | null>(null);
 
   useEffect(() => {
-    const isAuth = localStorage.getItem('admin_auth');
-    if (isAuth !== 'true') { router.push('/login'); return; }
     getOrders().then(data => { setOrders(data); setLoading(false); });
-  }, [router]);
+  }, []);
 
   const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
     setUpdating(orderId + newStatus);
