@@ -52,6 +52,12 @@ export default function Home() {
              <div className={styles.cardImageHolder} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop')" }}></div>
              <h4 className={styles.cardTitle}>{t.home.shoes}</h4>
            </Link>
+
+           {/* Fragrances */}
+           <Link href="/shop?category=fragrances" className={styles.card}>
+             <div className={styles.cardImageHolder} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2069&auto=format&fit=crop')" }}></div>
+             <h4 className={styles.cardTitle}>FRAGRANCES</h4>
+           </Link>
          </div>
       </section>
       

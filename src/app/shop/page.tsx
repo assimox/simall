@@ -9,7 +9,8 @@ const collections = [
   { id: 'oldmoney', title: 'Old Money', image: '/images/old-money.jpg.png' },
   { id: 'streetwear', title: 'Street Wear', image: '/images/streetwear.jpg.png' },
   { id: 'accessories', title: 'Accessories', image: '/images/accessories.jpg.png' },
-  { id: 'shoes', title: 'Shoes', image: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop' }
+  { id: 'shoes', title: 'Shoes', image: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop' },
+  { id: 'fragrances', title: 'Fragrances', image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2069&auto=format&fit=crop' }
 ];
 
 function ShopContent() {
