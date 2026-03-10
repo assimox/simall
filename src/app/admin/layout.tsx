@@ -9,7 +9,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem('admin_auth') === 'true') {
+    // Helper to read cookie
+    const getCookie = (name: string) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(';').shift();
+      return null;
+    };
+
+    if (getCookie('admin_auth') === 'true') {
       setAuthenticated(true);
     } else {
       router.replace('/login');
@@ -18,8 +26,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = () => {
     document.cookie = "admin_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    sessionStorage.removeItem('admin_auth');
-    router.replace('/login');
+    // Force a hard reload to clear any cached states and re-run middleware
+    window.location.href = '/login';
   };
 
   if (!authenticated) {

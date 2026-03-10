@@ -17,8 +17,8 @@ export default function Login() {
     if (phrase === '@1971H20AS08') {
       setTimeout(() => {
         document.cookie = "admin_auth=true; path=/";
-        sessionStorage.setItem('admin_auth', 'true'); // Keep this just in case client needs it
-        router.push('/admin/orders');
+        // Force hard reload to ensure middleware reads the new cookie and navigates correctly
+        window.location.href = '/admin/orders';
       }, 500);
     } else {
       setLoading(false);
