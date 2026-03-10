@@ -12,16 +12,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (sessionStorage.getItem('admin_auth') === 'true') {
       setAuthenticated(true);
     } else {
-      router.push('/login');
+      router.replace('/login');
     }
   }, [router]);
 
   const handleLogout = () => {
+    document.cookie = "admin_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     sessionStorage.removeItem('admin_auth');
-    router.push('/login');
+    router.replace('/login');
   };
 
-  if (!authenticated) return null; // Wait for redirect to prevent flash
+  if (!authenticated) {
+    return <div style={{ height: '100vh', width: '100vw', background: '#fff' }} />;
+  }
 
   return (
     <div className={styles.adminContainer}>
