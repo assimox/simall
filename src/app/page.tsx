@@ -9,7 +9,7 @@ export default function Home() {
     <main className={styles.main}>
       {/* Hero Section */}
       <section className={styles.hero}>
-        <div className={styles.heroImageOverlay} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')" }}></div>
+        <div className={styles.heroImageOverlay} style={{ backgroundImage: "url('/images/banner.jpg.png')" }}></div>
         <div className={styles.heroContent}>
           <h2 className={`fade-in-up ${styles.heroTitle}`}>{t.home.heroTitle}</h2>
           <div className="decorative-line fade-in-up" style={{ animationDelay: '0.1s' }}></div>
@@ -17,13 +17,15 @@ export default function Home() {
             {t.home.heroSubtitle}
           </p>
           <div className="fade-in-up" style={{ animationDelay: '0.4s', marginTop: '2rem' }}>
-            <Link href="/shop" className="btn-primary" style={{ backgroundColor: 'var(--foreground)', color: 'var(--background)' }}>{t.home.shopCollection}</Link>
+            <a href="#collections" className="btn-primary" style={{ backgroundColor: 'var(--foreground)', color: 'var(--background)' }}>
+              {t.home.shopCollection}
+            </a>
           </div>
         </div>
       </section>
 
       {/* Featured Categories */}
-      <section className={`container ${styles.categories}`}>
+      <section id="collections" className={`container ${styles.categories}`}>
          <div className={styles.sectionHeader}>
            <h3 style={{ fontSize: '2rem', fontFamily: 'var(--font-playfair)', fontWeight: 400 }}>{t.home.curatedCollections}</h3>
            <Link href="/shop" className={styles.viewAll}>{t.home.viewAll}</Link>
@@ -55,7 +57,7 @@ export default function Home() {
 
            {/* Fragrances */}
            <Link href="/shop?category=fragrances" className={styles.card}>
-             <div className={styles.cardImageHolder} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2069&auto=format&fit=crop')" }}></div>
+             <div className={styles.cardImageHolder} style={{ backgroundImage: "url('/images/fragrances.jpg.png')" }}></div>
              <h4 className={styles.cardTitle}>FRAGRANCES</h4>
            </Link>
          </div>
