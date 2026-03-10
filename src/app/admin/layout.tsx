@@ -9,7 +9,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem('admin_auth') === 'true') {
+    if (sessionStorage.getItem('admin_auth') === 'true') {
       setAuthenticated(true);
     } else {
       router.push('/login');
@@ -17,7 +17,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('admin_auth');
+    sessionStorage.removeItem('admin_auth');
     router.push('/login');
   };
 

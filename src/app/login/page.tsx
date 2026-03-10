@@ -16,7 +16,7 @@ export default function Login() {
     
     if (phrase === '@1971H20AS08') {
       setTimeout(() => {
-        localStorage.setItem('admin_auth', 'true');
+        sessionStorage.setItem('admin_auth', 'true');
         router.push('/admin/orders');
       }, 500);
     } else {
