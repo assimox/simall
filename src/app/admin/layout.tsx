@@ -51,7 +51,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
          <header className={styles.topbar}>
             <div className={styles.topbarRight}>
                <span>Assim</span>
-               <button onClick={handleLogout} className="btn-secondary" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }}>Logout</button>
+               <button 
+                 onClick={handleLogout} 
+                 style={{ 
+                   backgroundColor: '#0056b3', 
+                   color: '#fff', 
+                   border: 'none', 
+                   padding: '0.5rem 1.2rem', 
+                   borderRadius: '9999px',
+                   cursor: 'pointer',
+                   fontWeight: 600,
+                   fontSize: '0.85rem',
+                   letterSpacing: '0.5px'
+                 }}
+               >
+                 Exit Admin Panel
+               </button>
             </div>
          </header>
          <div className={styles.contentPad}>

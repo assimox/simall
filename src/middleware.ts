@@ -7,8 +7,10 @@ export function middleware(request: NextRequest) {
   if (isAdminRoute) {
     const adminAuth = request.cookies.get('admin_auth')?.value;
     
+    // Unconditionally redirect to login if the cookie isn't strictly 'true'
     if (adminAuth !== 'true') {
-      return NextResponse.redirect(new URL('/login', request.url));
+      const loginUrl = new URL('/login', request.url);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
