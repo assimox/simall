@@ -7,31 +7,81 @@ import styles from './admin.module.css';
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [authenticated, setAuthenticated] = useState(false);
+  const [phraseInput, setPhraseInput] = useState('');
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    // Helper to read cookie
-    const getCookie = (name: string) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop()?.split(';').shift();
-      return null;
-    };
-
-    if (getCookie('admin_auth') === 'true') {
+    // Check session storage on mount
+    if (sessionStorage.getItem('simall_admin_session') === '@1971H20AS08') {
       setAuthenticated(true);
-    } else {
-      router.replace('/login');
     }
-  }, [router]);
+  }, []);
+
+  const handleUnlock = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (phraseInput === '@1971H20AS08') {
+      sessionStorage.setItem('simall_admin_session', phraseInput);
+      setAuthenticated(true);
+      setError(false);
+    } else {
+      setError(true);
+      setPhraseInput('');
+    }
+  };
 
   const handleLogout = () => {
-    document.cookie = "admin_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    // Force a hard reload to clear any cached states and re-run middleware
-    window.location.href = '/login';
+    sessionStorage.removeItem('simall_admin_session');
+    setAuthenticated(false);
+    setPhraseInput('');
+    router.push('/');
   };
 
   if (!authenticated) {
-    return <div style={{ height: '100vh', width: '100vw', background: '#fff' }} />;
+    return (
+      <div style={{
+        minHeight: '100vh',
+        width: '100vw',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#ffffff',
+        fontFamily: 'var(--font-inter)'
+      }}>
+        <div style={{ maxWidth: '400px', width: '100%', padding: '2rem', textAlign: 'center' }}>
+          <p style={{
+            fontSize: '0.9rem',
+            color: '#333',
+            marginBottom: '2rem',
+            textTransform: 'uppercase',
+            letterSpacing: '1px'
+          }}>
+            To manage SIMALL store enter the secret phrase:
+          </p>
+          <form onSubmit={handleUnlock} style={{ display: 'flex', flexDirection: 'column' }}>
+            <input 
+              type="password" 
+              required 
+              value={phraseInput}
+              onChange={e => setPhraseInput(e.target.value)}
+              autoFocus
+              style={{
+                width: '100%',
+                padding: '1rem',
+                background: 'transparent',
+                border: 'none',
+                borderBottom: error ? '1px solid #dc3545' : '1px solid #ccc',
+                color: error ? '#dc3545' : '#000',
+                fontFamily: 'var(--font-inter)',
+                fontSize: '1.2rem',
+                textAlign: 'center',
+                outline: 'none',
+                transition: 'border-color 0.3s'
+              }}
+            />
+          </form>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -43,7 +93,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
          <nav className={styles.sidebarNav}>
             <Link href="/admin/orders">Orders Dashboard</Link>
             <Link href="/admin/products/new">Add Product</Link>
-            {/* Note: In a larger app, you'd list products here too */}
             <Link href="/" className={styles.storefrontLink}>View Storefront</Link>
          </nav>
       </aside>
