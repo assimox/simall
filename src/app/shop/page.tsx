@@ -19,7 +19,7 @@ function ShopContent() {
     { id: 'streetwear', title: t.home.streetWear, image: '/images/streetwear.jpg.png' },
     { id: 'accessories', title: t.home.accessories, image: '/images/accessories.jpg.png' },
     { id: 'shoes', title: t.home.shoes, image: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop' },
-    { id: 'fragrances', title: t.home.fragrances, image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2069&auto=format&fit=crop' }
+    { id: 'fragrances', title: t.home.fragrances, image: '/images/fragrances.jpg.png' }
   ];
 
   useEffect(() => {
