@@ -20,25 +20,20 @@ interface Slide {
   scale?: number;
 }
 
-// Ensure you place all these downloaded .glb files in public/models/
 const slides: Slide[] = [
   {
     id: 'oldmoney',
     title: 'Old Money Aesthetics',
     subtitle: 'Classic tailoring and timeless elegance.',
-    type: '3d',
-    // Replace with the specific 3D model path when you download it!
-    model: '/models/old_money.glb', 
-    scale: 1
+    type: 'image',
+    src: '/images/old-money.jpg.png'
   },
   {
     id: 'streetwear',
     title: 'Premium Streetwear',
     subtitle: 'Urban edge meets luxury materials.',
-    type: '3d',
-    // Replace with the specific 3D model path when you download it!
-    model: '/models/streetwear.glb', 
-    scale: 1
+    type: 'image',
+    src: '/images/streetwear.jpg.png'
   },
   {
     id: 'shoes',
@@ -53,23 +48,21 @@ const slides: Slide[] = [
     title: 'Curated Accessories',
     subtitle: 'The finishing touch of pure excellence.',
     type: '3d',
-    // Rolex Datejust model
     model: '/models/rolex-datejust/source/rolex_datejust.glb', 
-    scale: 0.15 // Making it larger (it was tiny before)
+    scale: 0.15 // Enlarged Rolex!
   },
   {
     id: 'fragrances',
     title: 'Luxury Fragrances',
     subtitle: 'Leave a trail of undeniable prestige.',
     type: '3d',
-    // Using the lighter 22MB Ultra Male
     model: '/models/jean_paul_gaultier_ultramale_75ml.glb',
     scale: 1
   }
 ];
 
 export default function AnimatedHero() {
-  const [currentIndex, setCurrentIndex] = useState(3); // Start on Accessories so you see the Rolex immediately!
+  const [currentIndex, setCurrentIndex] = useState(0); 
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -127,7 +120,6 @@ export default function AnimatedHero() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Overlay Text */}
       <div style={{ 
         position: 'absolute', 
         inset: 0, 
@@ -196,7 +188,6 @@ export default function AnimatedHero() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Slide Indicators */}
         <div style={{ position: 'absolute', bottom: '3rem', display: 'flex', gap: '0.8rem', pointerEvents: 'auto' }}>
           {slides.map((_, idx) => (
             <button
