@@ -2,27 +2,14 @@
 import styles from './page.module.css';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import AnimatedHero from '@/components/AnimatedHero';
 
 export default function Home() {
   const { t } = useLanguage();
   return (
     <main className={styles.main}>
       {/* Hero Section */}
-      <section className={styles.hero}>
-        <div className={styles.heroImageOverlay} style={{ backgroundImage: "url('/images/banner.jpg.png')" }}></div>
-        <div className={styles.heroContent}>
-          <h2 className={`fade-in-up ${styles.heroTitle}`}>{t.home.heroTitle}</h2>
-          <div className="decorative-line fade-in-up" style={{ animationDelay: '0.1s' }}></div>
-          <p className={`fade-in-up ${styles.heroSubtitle}`} style={{ animationDelay: '0.2s' }}>
-            {t.home.heroSubtitle}
-          </p>
-          <div className="fade-in-up" style={{ animationDelay: '0.4s', marginTop: '2rem' }}>
-            <a href="#collections" className="btn-primary" style={{ backgroundColor: 'var(--foreground)', color: 'var(--background)' }}>
-              {t.home.shopCollection}
-            </a>
-          </div>
-        </div>
-      </section>
+      <AnimatedHero />
 
       {/* Featured Categories */}
       <section id="collections" className={`container ${styles.categories}`}>
