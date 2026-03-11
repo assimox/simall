@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import CartDrawer from "@/components/CartDrawer";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import { CartProvider } from "@/lib/CartContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,6 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable}`}>
         <LanguageProvider>
+        <CartProvider>
           <div className="top-banner">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="1" y="3" width="15" height="13"></rect>
@@ -38,7 +41,9 @@ export default function RootLayout({
             <span>LIVRAISON DANS TOUT LE MAROC EN 48H | توصيل في جميع أنحاء المملكة في غضون 48 ساعة</span>
           </div>
           <Navbar />
+          <CartDrawer />
           {children}
+        </CartProvider>
         </LanguageProvider>
       </body>
     </html>

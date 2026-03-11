@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import styles from './Navbar.module.css';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Language } from '@/lib/i18n/dictionaries';
+import { useCart } from '@/lib/CartContext';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { language, setLanguage, t } = useLanguage();
+  const { totalItems, setDrawerOpen } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,6 +36,7 @@ export default function Navbar() {
               <Link href="/shop?category=streetwear">{t.nav.streetWear}</Link>
               <Link href="/shop?category=accessories">{t.nav.accessories}</Link>
               <Link href="/shop?category=shoes">{t.nav.shoes}</Link>
+              <Link href="/shop?category=fragrances">{t.nav.fragrances}</Link>
             </div>
           </div>
           <a href="#contact" className={styles.contactLink}>
@@ -58,7 +61,32 @@ export default function Navbar() {
               </div>
            </div>
            {/* Admin link hidden — access via /admin-assim */}
-           <Link href="/shop" className={styles.cartBtn}>{t.nav.cart}</Link>
+           <button className={styles.cartBtn} onClick={() => setDrawerOpen(true)} style={{ position: 'relative' }}>
+             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+               <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+             </svg>
+             {totalItems > 0 && (
+               <span style={{
+                 position: 'absolute',
+                 top: '-6px',
+                 right: '-8px',
+                 background: '#041e3a',
+                 color: '#fff',
+                 fontSize: '0.65rem',
+                 fontWeight: 700,
+                 width: '18px',
+                 height: '18px',
+                 borderRadius: '50%',
+                 display: 'flex',
+                 alignItems: 'center',
+                 justifyContent: 'center',
+                 fontFamily: 'var(--font-inter)'
+               }}>
+                 {totalItems}
+               </span>
+             )}
+           </button>
         </div>
       </div>
     </nav>

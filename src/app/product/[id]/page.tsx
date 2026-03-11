@@ -4,11 +4,13 @@ import { useParams } from 'next/navigation';
 import { getProductById, Product } from '@/lib/db';
 import styles from './page.module.css';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { useCart } from '@/lib/CartContext';
 import OrderForm from '@/components/OrderForm';
 
 export default function ProductDetail() {
   const { id } = useParams();
   const { t } = useLanguage();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [showOrderForm, setShowOrderForm] = useState(false);
@@ -82,12 +84,28 @@ export default function ProductDetail() {
              
              {!showOrderForm && !orderSuccess && (
                 (product.stock || 0) > 0 ? (
-                  <button 
-                    className={`btn-primary ${styles.addToCartBtn}`} 
-                    onClick={() => setShowOrderForm(true)}
-                  >
-                    {t.product.buyNow}
-                  </button>
+                  <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                    <button 
+                      className={`btn-primary ${styles.addToCartBtn}`} 
+                      onClick={() => addToCart({
+                        id: product.id as string,
+                        title: product.title,
+                        price: typeof product.price === 'number' ? product.price : parseFloat(product.price),
+                        imageUrl: product.imageUrl || 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=500&q=80',
+                        quantity: quantity
+                      })}
+                      style={{ flex: 1 }}
+                    >
+                      {t.product.addToBag}
+                    </button>
+                    <button 
+                      className={`btn-primary ${styles.addToCartBtn}`} 
+                      onClick={() => setShowOrderForm(true)}
+                      style={{ flex: 1, background: 'transparent', color: '#041e3a', border: '1px solid #041e3a' }}
+                    >
+                      {t.product.buyNow}
+                    </button>
+                  </div>
                 ) : (
                   <button 
                     className={`btn-primary ${styles.addToCartBtn}`} 
