@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, Center, Environment, OrbitControls, Float, ContactShadows, Html, PerspectiveCamera } from '@react-three/drei';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 function Model({ url, scale = 1, position = [0, 0, 0] }: { url: string, scale?: number, position?: [number, number, number] }) {
   const { scene } = useGLTF(url);
@@ -12,8 +13,8 @@ function Model({ url, scale = 1, position = [0, 0, 0] }: { url: string, scale?: 
 
 interface Slide {
   id: string;
-  title: string;
-  subtitle: string;
+  titleKey: string;       
+  subtitleKey: string;    
   type: 'image' | '3d' | 'video';
   src?: string;
   model?: string;
@@ -23,38 +24,38 @@ interface Slide {
 const slides: Slide[] = [
   {
     id: 'oldmoney',
-    title: 'Old Money Aesthetics',
-    subtitle: 'Classic tailoring and timeless elegance.',
+    titleKey: 'oldMoneyTitle',
+    subtitleKey: 'oldMoneySub',
     type: 'video',
     src: '/videos/oldmoneybanner.mp4'
   },
   {
     id: 'streetwear',
-    title: 'Premium Streetwear',
-    subtitle: 'Urban edge meets luxury materials.',
-    type: 'image',
-    src: '/images/streetwear.jpg.png'
+    titleKey: 'streetWearTitle',
+    subtitleKey: 'streetWearSub',
+    type: 'video',
+    src: '/videos/streetwear.mp4'
   },
   {
     id: 'shoes',
-    title: 'Exclusive Shoes',
-    subtitle: 'Step into greatness with curated kicks.',
+    titleKey: 'shoesTitle',
+    subtitleKey: 'shoesSub',
     type: '3d',
     model: '/models/nike_jordan_4_retro_black_cat.glb',
     scale: 1
   },
   {
     id: 'accessories',
-    title: 'Curated Accessories',
-    subtitle: 'The finishing touch of pure excellence.',
+    titleKey: 'accessoriesTitle',
+    subtitleKey: 'accessoriesSub',
     type: '3d',
     model: '/models/rolex-datejust/source/rolex_datejust.glb', 
-    scale: 30 // Making it HUGE so it completely fills the screen
+    scale: 30
   },
   {
     id: 'fragrances',
-    title: 'Luxury Fragrances',
-    subtitle: 'Leave a trail of undeniable prestige.',
+    titleKey: 'fragrancesTitle',
+    subtitleKey: 'fragrancesSub',
     type: '3d',
     model: '/models/jean_paul_gaultier_ultramale_75ml.glb',
     scale: 1
@@ -64,10 +65,11 @@ const slides: Slide[] = [
 export default function AnimatedHero() {
   const [currentIndex, setCurrentIndex] = useState(0); 
   const [isMobile, setIsMobile] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile(); // Check on mount
+    checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
@@ -80,6 +82,12 @@ export default function AnimatedHero() {
   }, []);
 
   const slide = slides[currentIndex];
+  const isDark = slide.type === 'image' || slide.type === 'video';
+
+  // Get translated title and subtitle from the hero dictionary
+  const heroDict = t.hero as Record<string, string>;
+  const slideTitle = heroDict[slide.titleKey] || slide.titleKey;
+  const slideSubtitle = heroDict[slide.subtitleKey] || slide.subtitleKey;
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '85vh', overflow: 'hidden', backgroundColor: '#f9f9f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -98,6 +106,7 @@ export default function AnimatedHero() {
               loop
               muted
               playsInline
+              key={slide.src}
               style={{
                 position: 'absolute',
                 inset: 0,
@@ -173,48 +182,48 @@ export default function AnimatedHero() {
             <h2 style={{ 
               fontFamily: 'var(--font-playfair)', 
               fontSize: isMobile ? '2.2rem' : '4.5rem', 
-              color: (slide.type === 'image' || slide.type === 'video') ? '#ffffff' : '#041e3a', 
+              color: isDark ? '#ffffff' : '#041e3a', 
               fontWeight: 600,
               marginBottom: '1rem',
               textTransform: 'uppercase',
               letterSpacing: '2px',
-              textShadow: (slide.type === 'image' || slide.type === 'video') ? '0 4px 12px rgba(0,0,0,0.6)' : 'none',
+              textShadow: isDark ? '0 4px 12px rgba(0,0,0,0.6)' : 'none',
               padding: '0 20px'
             }}>
-              {slide.title}
+              {slideTitle}
             </h2>
             <div style={{ 
               width: isMobile ? '40px' : '60px', 
               height: '2px', 
-              backgroundColor: (slide.type === 'image' || slide.type === 'video') ? '#ffffff' : '#041e3a', 
+              backgroundColor: isDark ? '#ffffff' : '#041e3a', 
               margin: isMobile ? '0 auto 1.2rem auto' : '0 auto 1.5rem auto' 
             }} />
             <p style={{ 
               fontFamily: 'var(--font-inter)', 
               fontSize: isMobile ? '0.95rem' : '1.2rem', 
-              color: (slide.type === 'image' || slide.type === 'video') ? '#f0f0f0' : '#444', 
+              color: isDark ? '#f0f0f0' : '#444', 
               marginBottom: isMobile ? '2rem' : '3rem',
               fontWeight: 400,
               letterSpacing: '0.5px',
-              textShadow: (slide.type === 'image' || slide.type === 'video') ? '0 2px 4px rgba(0,0,0,0.8)' : 'none',
+              textShadow: isDark ? '0 2px 4px rgba(0,0,0,0.8)' : 'none',
               padding: isMobile ? '0 5px' : '0'
             }}>
-              {slide.subtitle}
+              {slideSubtitle}
             </p>
             <a 
               href="#collections" 
               className="btn-primary" 
               style={{ 
-                backgroundColor: (slide.type === 'image' || slide.type === 'video') ? '#ffffff' : '#041e3a', 
-                color: (slide.type === 'image' || slide.type === 'video') ? '#000000' : '#ffffff',
+                backgroundColor: isDark ? '#ffffff' : '#041e3a', 
+                color: isDark ? '#000000' : '#ffffff',
                 fontSize: isMobile ? '0.85rem' : '0.95rem',
-                border: (slide.type === 'image' || slide.type === 'video') ? 'none' : '1px solid #041e3a',
+                border: isDark ? 'none' : '1px solid #041e3a',
                 padding: isMobile ? '0.8rem 2rem' : '0.8rem 2.5rem',
                 fontWeight: 600,
                 letterSpacing: '1px'
               }}
             >
-              Discover Collection
+              {t.hero.discoverCollection}
             </a>
           </motion.div>
         </AnimatePresence>
@@ -228,7 +237,7 @@ export default function AnimatedHero() {
                 width: currentIndex === idx ? (isMobile ? '20px' : '32px') : (isMobile ? '6px' : '10px'),
                 height: isMobile ? '6px' : '10px',
                 borderRadius: '5px',
-                backgroundColor: (slide.type === 'image' || slide.type === 'video') 
+                backgroundColor: isDark 
                   ? (currentIndex === idx ? '#ffffff' : 'rgba(255,255,255,0.4)') 
                   : (currentIndex === idx ? '#041e3a' : 'rgba(4,30,58,0.2)'),
                 border: 'none',

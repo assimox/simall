@@ -45,7 +45,7 @@ export default function Home() {
            {/* Fragrances */}
            <Link href="/shop?category=fragrances" className={styles.card}>
              <div className={styles.cardImageHolder} style={{ backgroundImage: "url('/images/fragrances.jpg.png')" }}></div>
-             <h4 className={styles.cardTitle}>FRAGRANCES</h4>
+             <h4 className={styles.cardTitle}>{t.home.fragrances}</h4>
            </Link>
          </div>
       </section>
@@ -64,8 +64,8 @@ export default function Home() {
       <section id="contact" className={styles.contactSection}>
         <div className={styles.contactInner}>
           <div className="decorative-line" style={{ margin: '0 auto 2.5rem auto' }}></div>
-          <h3 className={styles.contactTitle}>Get In Touch</h3>
-          <p className={styles.contactSub}>We'd love to hear from you. Reach out through any channel below.</p>
+          <h3 className={styles.contactTitle}>{t.home.getInTouch}</h3>
+          <p className={styles.contactSub}>{t.home.getInTouchSub}</p>
 
           <div className={styles.contactActions}>
             {/* Phone - click to copy */}
@@ -90,13 +90,13 @@ export default function Home() {
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                 <polyline points="22,6 12,13 2,6"/>
               </svg>
-              <span>Send an Email</span>
+              <span>{t.home.sendEmail}</span>
             </a>
           </div>
 
           <div className="decorative-line" style={{ margin: '3rem auto' }}></div>
 
-          <p className={styles.followText}>Follow Us</p>
+          <p className={styles.followText}>{t.home.followUs}</p>
           <div className={styles.socialRow}>
             {/* TikTok */}
             <a href="/coming-soon" className={styles.socialIcon} title="TikTok">
@@ -120,7 +120,7 @@ export default function Home() {
             </a>
           </div>
 
-          <p className={styles.copyright}>© 2025 SIMALL. All Rights Reserved.</p>
+          <p className={styles.copyright}>{t.home.copyright}</p>
         </div>
       </section>
     </main>

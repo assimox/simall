@@ -4,20 +4,23 @@ import { useSearchParams } from 'next/navigation';
 import styles from './page.module.css';
 import { getProducts, Product } from '@/lib/db';
 import Link from 'next/link';
-
-const collections = [
-  { id: 'oldmoney', title: 'Old Money', image: '/images/old-money.jpg.png' },
-  { id: 'streetwear', title: 'Street Wear', image: '/images/streetwear.jpg.png' },
-  { id: 'accessories', title: 'Accessories', image: '/images/accessories.jpg.png' },
-  { id: 'shoes', title: 'Shoes', image: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop' },
-  { id: 'fragrances', title: 'Fragrances', image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2069&auto=format&fit=crop' }
-];
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 function ShopContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category'));
+  const { t } = useLanguage();
+
+  // Translated collection names
+  const collections = [
+    { id: 'oldmoney', title: t.home.oldMoney, image: '/images/old-money.jpg.png' },
+    { id: 'streetwear', title: t.home.streetWear, image: '/images/streetwear.jpg.png' },
+    { id: 'accessories', title: t.home.accessories, image: '/images/accessories.jpg.png' },
+    { id: 'shoes', title: t.home.shoes, image: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop' },
+    { id: 'fragrances', title: t.home.fragrances, image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2069&auto=format&fit=crop' }
+  ];
 
   useEffect(() => {
     async function load() {
@@ -39,9 +42,9 @@ function ShopContent() {
   return (
     <main className={styles.main}>
       <header className={styles.shopHeader}>
-         <h1 className="fade-in-up">{selectedCategory ? currentCollection?.title : 'The Collections'}</h1>
+         <h1 className="fade-in-up">{selectedCategory ? currentCollection?.title : t.shop.theCollections}</h1>
          <p className="fade-in-up" style={{ animationDelay: '0.2s' }}>
-           {selectedCategory ? 'Explore curated pieces from this collection.' : 'Discover our distinct collections.'}
+           {selectedCategory ? t.shop.exploreCurated : t.shop.discoverCollections}
          </p>
          {selectedCategory && (
            <button 
@@ -49,7 +52,7 @@ function ShopContent() {
              className="btn-secondary" 
              style={{ marginTop: '2rem', padding: '0.5rem 1.5rem' }}
            >
-             ← Back to Collections
+             {t.shop.backToCollections}
            </button>
          )}
       </header>
@@ -73,8 +76,8 @@ function ShopContent() {
            </div>
         ) : filteredProducts.length === 0 ? (
            <div className={`fade-in-up ${styles.emptyState}`}>
-             <h2>No products actually.</h2>
-             <p>Coming soon...</p>
+             <h2>{t.shop.noProducts}</h2>
+             <p>{t.shop.comingSoon}</p>
            </div>
         ) : (
            <div className={styles.productGrid}>
