@@ -63,6 +63,14 @@ const slides: Slide[] = [
 
 export default function AnimatedHero() {
   const [currentIndex, setCurrentIndex] = useState(0); 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile(); // Check on mount
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -85,16 +93,18 @@ export default function AnimatedHero() {
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
         >
           {slide.type === 'image' && (
-            <div 
-              style={{ 
-                width: '100%', 
-                height: '100%', 
-                backgroundImage: `url(${slide.src || '/images/streetwear.jpg.png'})`, 
-                backgroundSize: 'cover', 
-                backgroundPosition: 'center',
-                filter: 'brightness(0.5)'
-              }} 
-            />
+             <motion.div 
+               animate={{ scale: 1.06 }} // Subtle Ken Burns zoom effect
+               transition={{ duration: 10, ease: "linear" }}
+               style={{ 
+                 width: '100%', 
+                 height: '100%', 
+                 backgroundImage: `url(${slide.src || '/images/streetwear.jpg.png'})`, 
+                 backgroundSize: 'cover', 
+                 backgroundPosition: 'center',
+                 filter: 'brightness(0.5)'
+               }} 
+             />
           )}
 
           {slide.type === '3d' && slide.model && (
@@ -129,7 +139,8 @@ export default function AnimatedHero() {
         alignItems: 'center', 
         textAlign: 'center',
         pointerEvents: 'none', 
-        zIndex: 10
+        zIndex: 10,
+        padding: '0 20px'
       }}>
         <AnimatePresence mode="wait">
           <motion.div
@@ -138,11 +149,11 @@ export default function AnimatedHero() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            style={{ pointerEvents: 'auto' }}
+            style={{ pointerEvents: 'auto', width: '100%', maxWidth: '800px', marginTop: isMobile ? '-3rem' : '0' }}
           >
             <h2 style={{ 
               fontFamily: 'var(--font-playfair)', 
-              fontSize: '4.5rem', 
+              fontSize: isMobile ? '2.2rem' : '4.5rem', 
               color: slide.type === 'image' ? '#ffffff' : '#041e3a', 
               fontWeight: 600,
               marginBottom: '1rem',
@@ -154,19 +165,20 @@ export default function AnimatedHero() {
               {slide.title}
             </h2>
             <div style={{ 
-              width: '60px', 
+              width: isMobile ? '40px' : '60px', 
               height: '2px', 
               backgroundColor: slide.type === 'image' ? '#ffffff' : '#041e3a', 
-              margin: '0 auto 1.5rem auto' 
+              margin: isMobile ? '0 auto 1.2rem auto' : '0 auto 1.5rem auto' 
             }} />
             <p style={{ 
               fontFamily: 'var(--font-inter)', 
-              fontSize: '1.2rem', 
+              fontSize: isMobile ? '0.95rem' : '1.2rem', 
               color: slide.type === 'image' ? '#f0f0f0' : '#444', 
-              marginBottom: '3rem',
+              marginBottom: isMobile ? '2rem' : '3rem',
               fontWeight: 400,
               letterSpacing: '0.5px',
-              textShadow: slide.type === 'image' ? '0 2px 4px rgba(0,0,0,0.8)' : 'none'
+              textShadow: slide.type === 'image' ? '0 2px 4px rgba(0,0,0,0.8)' : 'none',
+              padding: isMobile ? '0 5px' : '0'
             }}>
               {slide.subtitle}
             </p>
@@ -176,9 +188,9 @@ export default function AnimatedHero() {
               style={{ 
                 backgroundColor: slide.type === 'image' ? '#ffffff' : '#041e3a', 
                 color: slide.type === 'image' ? '#000000' : '#ffffff',
-                fontSize: '0.95rem',
+                fontSize: isMobile ? '0.85rem' : '0.95rem',
                 border: slide.type === 'image' ? 'none' : '1px solid #041e3a',
-                padding: '0.8rem 2.5rem',
+                padding: isMobile ? '0.8rem 2rem' : '0.8rem 2.5rem',
                 fontWeight: 600,
                 letterSpacing: '1px'
               }}
@@ -188,14 +200,14 @@ export default function AnimatedHero() {
           </motion.div>
         </AnimatePresence>
 
-        <div style={{ position: 'absolute', bottom: '3rem', display: 'flex', gap: '0.8rem', pointerEvents: 'auto' }}>
+        <div style={{ position: 'absolute', bottom: isMobile ? '1.5rem' : '3rem', display: 'flex', gap: '0.8rem', pointerEvents: 'auto' }}>
           {slides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentIndex(idx)}
               style={{
-                width: currentIndex === idx ? '32px' : '10px',
-                height: '10px',
+                width: currentIndex === idx ? (isMobile ? '20px' : '32px') : (isMobile ? '6px' : '10px'),
+                height: isMobile ? '6px' : '10px',
                 borderRadius: '5px',
                 backgroundColor: slide.type === 'image' 
                   ? (currentIndex === idx ? '#ffffff' : 'rgba(255,255,255,0.4)') 
