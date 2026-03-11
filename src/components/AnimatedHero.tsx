@@ -14,7 +14,7 @@ interface Slide {
   id: string;
   title: string;
   subtitle: string;
-  type: 'image' | '3d';
+  type: 'image' | '3d' | 'video';
   src?: string;
   model?: string;
   scale?: number;
@@ -25,8 +25,8 @@ const slides: Slide[] = [
     id: 'oldmoney',
     title: 'Old Money Aesthetics',
     subtitle: 'Classic tailoring and timeless elegance.',
-    type: 'image',
-    src: '/images/old-money.jpg.png'
+    type: 'video',
+    src: '/videos/oldmoneybanner.mp4'
   },
   {
     id: 'streetwear',
@@ -92,9 +92,28 @@ export default function AnimatedHero() {
           transition={{ duration: 1.2, ease: "easeInOut" }}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
         >
+          {slide.type === 'video' && (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                filter: 'brightness(0.55)'
+              }}
+            >
+              <source src={slide.src} type="video/mp4" />
+            </video>
+          )}
+
           {slide.type === 'image' && (
              <motion.div 
-               animate={{ scale: 1.06 }} // Subtle Ken Burns zoom effect
+               animate={{ scale: 1.06 }}
                transition={{ duration: 10, ease: "linear" }}
                style={{ 
                  width: '100%', 
@@ -154,12 +173,12 @@ export default function AnimatedHero() {
             <h2 style={{ 
               fontFamily: 'var(--font-playfair)', 
               fontSize: isMobile ? '2.2rem' : '4.5rem', 
-              color: slide.type === 'image' ? '#ffffff' : '#041e3a', 
+              color: (slide.type === 'image' || slide.type === 'video') ? '#ffffff' : '#041e3a', 
               fontWeight: 600,
               marginBottom: '1rem',
               textTransform: 'uppercase',
               letterSpacing: '2px',
-              textShadow: slide.type === 'image' ? '0 4px 12px rgba(0,0,0,0.6)' : 'none',
+              textShadow: (slide.type === 'image' || slide.type === 'video') ? '0 4px 12px rgba(0,0,0,0.6)' : 'none',
               padding: '0 20px'
             }}>
               {slide.title}
@@ -167,17 +186,17 @@ export default function AnimatedHero() {
             <div style={{ 
               width: isMobile ? '40px' : '60px', 
               height: '2px', 
-              backgroundColor: slide.type === 'image' ? '#ffffff' : '#041e3a', 
+              backgroundColor: (slide.type === 'image' || slide.type === 'video') ? '#ffffff' : '#041e3a', 
               margin: isMobile ? '0 auto 1.2rem auto' : '0 auto 1.5rem auto' 
             }} />
             <p style={{ 
               fontFamily: 'var(--font-inter)', 
               fontSize: isMobile ? '0.95rem' : '1.2rem', 
-              color: slide.type === 'image' ? '#f0f0f0' : '#444', 
+              color: (slide.type === 'image' || slide.type === 'video') ? '#f0f0f0' : '#444', 
               marginBottom: isMobile ? '2rem' : '3rem',
               fontWeight: 400,
               letterSpacing: '0.5px',
-              textShadow: slide.type === 'image' ? '0 2px 4px rgba(0,0,0,0.8)' : 'none',
+              textShadow: (slide.type === 'image' || slide.type === 'video') ? '0 2px 4px rgba(0,0,0,0.8)' : 'none',
               padding: isMobile ? '0 5px' : '0'
             }}>
               {slide.subtitle}
@@ -186,10 +205,10 @@ export default function AnimatedHero() {
               href="#collections" 
               className="btn-primary" 
               style={{ 
-                backgroundColor: slide.type === 'image' ? '#ffffff' : '#041e3a', 
-                color: slide.type === 'image' ? '#000000' : '#ffffff',
+                backgroundColor: (slide.type === 'image' || slide.type === 'video') ? '#ffffff' : '#041e3a', 
+                color: (slide.type === 'image' || slide.type === 'video') ? '#000000' : '#ffffff',
                 fontSize: isMobile ? '0.85rem' : '0.95rem',
-                border: slide.type === 'image' ? 'none' : '1px solid #041e3a',
+                border: (slide.type === 'image' || slide.type === 'video') ? 'none' : '1px solid #041e3a',
                 padding: isMobile ? '0.8rem 2rem' : '0.8rem 2.5rem',
                 fontWeight: 600,
                 letterSpacing: '1px'
@@ -209,7 +228,7 @@ export default function AnimatedHero() {
                 width: currentIndex === idx ? (isMobile ? '20px' : '32px') : (isMobile ? '6px' : '10px'),
                 height: isMobile ? '6px' : '10px',
                 borderRadius: '5px',
-                backgroundColor: slide.type === 'image' 
+                backgroundColor: (slide.type === 'image' || slide.type === 'video') 
                   ? (currentIndex === idx ? '#ffffff' : 'rgba(255,255,255,0.4)') 
                   : (currentIndex === idx ? '#041e3a' : 'rgba(4,30,58,0.2)'),
                 border: 'none',
