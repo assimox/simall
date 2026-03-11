@@ -49,7 +49,7 @@ const slides: Slide[] = [
     subtitle: 'The finishing touch of pure excellence.',
     type: '3d',
     model: '/models/rolex-datejust/source/rolex_datejust.glb', 
-    scale: 0.15 // Enlarged Rolex!
+    scale: 30 // Making it HUGE so it completely fills the screen
   },
   {
     id: 'fragrances',
