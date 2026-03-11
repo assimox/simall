@@ -10,8 +10,18 @@ function Model({ url, scale = 1, position = [0, 0, 0] }: { url: string, scale?: 
   return <primitive object={scene} scale={scale} position={position} />;
 }
 
+interface Slide {
+  id: string;
+  title: string;
+  subtitle: string;
+  type: 'image' | '3d';
+  src?: string;
+  model?: string;
+  scale?: number;
+}
+
 // Ensure you place all these downloaded .glb files in public/models/
-const slides = [
+const slides: Slide[] = [
   {
     id: 'oldmoney',
     title: 'Old Money Aesthetics',
