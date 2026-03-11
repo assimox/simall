@@ -213,3 +213,8 @@ export default function AnimatedHero() {
     </div>
   );
 }
+
+// Preload the heavy 3D assets so the browser downloads them in the background instantly
+useGLTF.preload('/models/nike_jordan_4_retro_black_cat.glb');
+useGLTF.preload('/models/rolex-datejust/source/rolex_datejust.glb');
+useGLTF.preload('/models/jean_paul_gaultier_ultramale_75ml.glb');
