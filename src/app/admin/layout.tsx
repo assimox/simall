@@ -93,6 +93,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
          <nav className={styles.sidebarNav}>
             <Link href="/admin/dashboard">View The evolution</Link>
             <Link href="/admin/orders">Orders Dashboard</Link>
+            <Link href="/admin">Products Manager</Link>
             <Link href="/admin/products/new">Add Product</Link>
             <Link href="/" className={styles.storefrontLink}>View Storefront</Link>
          </nav>
