@@ -6,6 +6,7 @@ import styles from './page.module.css';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useCart } from '@/lib/CartContext';
 import OrderForm from '@/components/OrderForm';
+import Image from 'next/image';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -19,6 +20,8 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<number | null>(null);
   const [displayImage, setDisplayImage] = useState('');
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [thumbLoaded, setThumbLoaded] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     async function load() {
@@ -42,7 +45,9 @@ export default function ProductDetail() {
 
   const handleColorSelect = (index: number) => {
     if (!product?.colorVariants) return;
+    if (selectedColor === index) return;
     setSelectedColor(index);
+    setImageLoaded(false); // Reset main image loader
     setDisplayImage(product.colorVariants[index].imageUrl);
   };
 
@@ -72,11 +77,18 @@ export default function ProductDetail() {
     <main className={styles.main}>
       <div className={`container ${styles.productGrid}`}>
          <div className={`fade-in-up ${styles.imageCol}`}>
-            <img 
-              src={displayImage || product.imageUrl || 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80'} 
-              alt={product.title} 
-              className={styles.productImage}
-            />
+            <div className={styles.mainImageContainer}>
+              {!imageLoaded && <div className={styles.skeleton}></div>}
+              <Image 
+                src={displayImage || product.imageUrl || 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80'} 
+                alt={product.title} 
+                className={styles.productImage}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+                onLoad={() => setImageLoaded(true)}
+              />
+            </div>
 
             {/* Color variant thumbnails below main image */}
             {hasColors && (
@@ -87,13 +99,23 @@ export default function ProductDetail() {
                     onClick={() => handleColorSelect(i)}
                     title={cv.name}
                     style={{
+                      position: 'relative',
                       width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden',
                       border: selectedColor === i ? '2px solid #041e3a' : '2px solid #eee',
                       cursor: 'pointer', padding: 0, background: 'none',
-                      transition: 'border-color 0.2s'
+                      transition: 'border-color 0.2s',
+                      flexShrink: 0
                     }}
                   >
-                    <img src={cv.imageUrl} alt={cv.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    {!thumbLoaded[i] && <div className={styles.skeleton}></div>}
+                    <Image 
+                      src={cv.imageUrl} 
+                      alt={cv.name} 
+                      fill
+                      sizes="60px"
+                      style={{ objectFit: 'cover' }}
+                      onLoad={() => setThumbLoaded(prev => ({...prev, [i]: true}))}
+                    />
                   </button>
                 ))}
               </div>

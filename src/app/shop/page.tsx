@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import styles from './page.module.css';
 import { getProducts, Product } from '@/lib/db';
 import Link from 'next/link';
@@ -12,6 +13,7 @@ function ShopContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category'));
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const { t } = useLanguage();
 
   // Sync URL when category changes
@@ -41,11 +43,22 @@ function ShopContent() {
 
   useEffect(() => {
     async function load() {
-      setTimeout(async () => {
-        const data = await getProducts();
-        setProducts(data);
-        setLoading(false);
-      }, 500);
+      const data = await getProducts();
+      setProducts(data);
+      setLoading(false);
+
+      // Background preload all product images
+      data.forEach(product => {
+        const img = new window.Image();
+        img.src = product.imageUrl || '';
+        // Also preload color variant images
+        if (product.colorVariants) {
+          product.colorVariants.forEach(cv => {
+            const cvImg = new window.Image();
+            cvImg.src = cv.imageUrl;
+          });
+        }
+      });
     }
     load();
   }, []);
@@ -55,6 +68,10 @@ function ShopContent() {
     : products;
 
   const currentCollection = collections.find(c => c.id === selectedCategory);
+
+  const handleImageLoad = (id: string) => {
+    setLoadedImages(prev => new Set(prev).add(id));
+  };
 
   return (
     <main className={styles.main}>
@@ -76,17 +93,34 @@ function ShopContent() {
 
       <div className={`container ${styles.shopContainer}`}>
         {loading ? (
-           <div className={styles.emptyState}>
-             <div className={styles.spinner}></div>
+           /* Skeleton loading grid */
+           <div className={styles.productGrid}>
+             {[1,2,3,4,5,6].map(i => (
+               <div key={i} className={styles.productCard} style={{ pointerEvents: 'none' }}>
+                 <div className={styles.skeleton}></div>
+                 <div className={styles.productInfo}>
+                   <div className={styles.skeletonText}></div>
+                   <div className={styles.skeletonTextShort}></div>
+                 </div>
+               </div>
+             ))}
            </div>
         ) : !selectedCategory ? (
            <div className={styles.categoryGrid}>
               {collections.map((col) => (
                  <div key={col.id} className={styles.categoryCard} onClick={() => handleCategoryChange(col.id)}>
-                    <div 
-                      className={styles.categoryImage} 
-                      style={{ backgroundImage: `url(${col.image})` }}
-                    />
+                    <div className={styles.categoryImageWrap}>
+                      {!loadedImages.has(`cat-${col.id}`) && <div className={styles.skeleton}></div>}
+                      <Image 
+                        src={col.image}
+                        alt={col.title}
+                        fill
+                        sizes="(max-width: 768px) 50vw, 33vw"
+                        className={styles.categoryImage}
+                        onLoad={() => handleImageLoad(`cat-${col.id}`)}
+                        priority
+                      />
+                    </div>
                     <h3 className={styles.categoryTitle}>{col.title}</h3>
                  </div>
               ))}
@@ -98,12 +132,20 @@ function ShopContent() {
            </div>
         ) : (
            <div className={styles.productGrid}>
-              {filteredProducts.map((product) => (
+              {filteredProducts.map((product, index) => (
                  <Link href={`/product/${product.id}`} key={product.id!} className={styles.productCard}>
-                    <div 
-                      className={styles.imageBox} 
-                      style={{ backgroundImage: `url(${product.imageUrl || 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=500&q=80'})` }}
-                    />
+                    <div className={styles.imageBox}>
+                      {!loadedImages.has(product.id!) && <div className={styles.skeleton}></div>}
+                      <Image
+                        src={product.imageUrl || 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=500&q=80'}
+                        alt={product.title}
+                        fill
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        className={styles.productImage}
+                        onLoad={() => handleImageLoad(product.id!)}
+                        priority={index < 4}
+                      />
+                    </div>
                     <div className={styles.productInfo}>
                       <h3>{product.title}</h3>
                       <p className={styles.price}>{typeof product.price === 'number' ? product.price.toFixed(2) : product.price} MAD</p>

@@ -56,6 +56,40 @@
   100% { transform: rotate(360deg); }
 }
 
+/* ========== Skeleton Shimmer ========== */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  z-index: 2;
+}
+
+.skeletonText {
+  height: 1.1rem;
+  width: 70%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  margin-bottom: 0.5rem;
+}
+
+.skeletonTextShort {
+  height: 0.9rem;
+  width: 40%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
 /* Category Grid */
 .categoryGrid {
   display: grid;
@@ -88,11 +122,15 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-.categoryImage {
+.categoryImageWrap {
+  position: relative;
   height: 450px;
+  overflow: hidden;
   background-color: var(--muted);
-  background-size: cover;
-  background-position: center;
+}
+
+.categoryImage {
+  object-fit: cover;
   transition: transform var(--transition-slow);
 }
 
@@ -128,12 +166,16 @@
 }
 
 .imageBox {
+  position: relative;
   height: 400px;
   background-color: var(--muted);
-  background-size: cover;
-  background-position: center;
   margin-bottom: 1.5rem;
   transition: transform var(--transition-slow);
+  overflow: hidden;
+}
+
+.productImage {
+  object-fit: cover;
 }
 
 .productInfo h3 {
