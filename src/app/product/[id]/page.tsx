@@ -132,7 +132,7 @@ export default function ProductDetail() {
              {hasSizes && (
                <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
                  <span style={{ fontWeight: 600, fontFamily: 'var(--font-inter)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '0.6rem' }}>
-                   SIZE {selectedSize && <span style={{ fontWeight: 400, color: '#666' }}>— {selectedSize}</span>}
+                   {t.product.size} {selectedSize && <span style={{ fontWeight: 400, color: '#666' }}>— {selectedSize}</span>}
                  </span>
                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                    {product.sizes!.map((size) => (
@@ -163,13 +163,13 @@ export default function ProductDetail() {
              {hasColors && selectedColor !== null && (
                <div style={{ marginBottom: '0.5rem' }}>
                  <span style={{ fontWeight: 600, fontFamily: 'var(--font-inter)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                   COLOR — <span style={{ fontWeight: 400, color: '#666' }}>{product.colorVariants![selectedColor].name}</span>
+                   {t.product.color} — <span style={{ fontWeight: 400, color: '#666' }}>{product.colorVariants![selectedColor].name}</span>
                  </span>
                </div>
              )}
              
              <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
-               <span style={{ fontWeight: 500, fontFamily: 'var(--font-inter)', fontSize: '0.9rem' }}>QUANTITY</span>
+               <span style={{ fontWeight: 500, fontFamily: 'var(--font-inter)', fontSize: '0.9rem' }}>{t.product.quantity}</span>
                <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--border)', borderRadius: '9999px', overflow: 'hidden' }}>
                  <button 
                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -182,7 +182,7 @@ export default function ProductDetail() {
                  >+</button>
                </div>
                <span style={{ fontSize: '0.8rem', color: 'var(--muted-text)', textTransform: 'uppercase' }}>
-                 {(product.stock || 0) > 0 ? `${product.stock} in stock` : 'Out of stock'}
+                 {(product.stock || 0) > 0 ? `${product.stock} ${t.product.inStock}` : t.product.outOfStock}
                </span>
              </div>
              
@@ -192,7 +192,7 @@ export default function ProductDetail() {
                     <button 
                       className={`btn-primary ${styles.addToCartBtn}`} 
                       onClick={() => {
-                        if (hasSizes && !selectedSize) { alert('Please select a size'); return; }
+                        if (hasSizes && !selectedSize) { alert(t.product.selectSize); return; }
                         addToCart({
                           id: product.id as string,
                           title: product.title,
@@ -210,7 +210,7 @@ export default function ProductDetail() {
                     <button 
                       className={`btn-primary ${styles.addToCartBtn}`} 
                       onClick={() => {
-                        if (hasSizes && !selectedSize) { alert('Please select a size'); return; }
+                        if (hasSizes && !selectedSize) { alert(t.product.selectSize); return; }
                         setShowOrderForm(true);
                       }}
                       style={{ flex: 1, background: 'transparent', color: '#041e3a', border: '1px solid #041e3a' }}
@@ -224,7 +224,7 @@ export default function ProductDetail() {
                     disabled
                     style={{ opacity: 0.5, cursor: 'not-allowed' }}
                   >
-                    SOLD OUT
+                    {t.product.soldOut}
                   </button>
                 )
              )}
