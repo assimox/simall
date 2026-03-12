@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import { getProducts, Product } from '@/lib/db';
 import Link from 'next/link';
@@ -8,10 +8,27 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 function ShopContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category'));
   const { t } = useLanguage();
+
+  // Sync URL when category changes
+  const handleCategoryChange = (category: string | null) => {
+    setSelectedCategory(category);
+    if (category) {
+      router.push(`/shop?category=${category}`, { scroll: false });
+    } else {
+      router.push('/shop', { scroll: false });
+    }
+  };
+
+  // Sync state when URL changes (e.g. browser back/forward)
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    setSelectedCategory(cat);
+  }, [searchParams]);
 
   // Translated collection names
   const collections = [
@@ -48,7 +65,7 @@ function ShopContent() {
          </p>
          {selectedCategory && (
            <button 
-             onClick={() => setSelectedCategory(null)} 
+             onClick={() => handleCategoryChange(null)} 
              className="btn-secondary" 
              style={{ marginTop: '2rem', padding: '0.5rem 1.5rem' }}
            >
@@ -65,7 +82,7 @@ function ShopContent() {
         ) : !selectedCategory ? (
            <div className={styles.categoryGrid}>
               {collections.map((col) => (
-                 <div key={col.id} className={styles.categoryCard} onClick={() => setSelectedCategory(col.id)}>
+                 <div key={col.id} className={styles.categoryCard} onClick={() => handleCategoryChange(col.id)}>
                     <div 
                       className={styles.categoryImage} 
                       style={{ backgroundImage: `url(${col.image})` }}
