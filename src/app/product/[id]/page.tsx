@@ -83,6 +83,27 @@ export default function ProductDetail() {
         : product.colorVariants[selectedColor].name)
     : undefined;
 
+  let currentVariantKey: string | undefined = undefined;
+  let currentStock = product.stock || 0;
+
+  if (hasSizes || hasColors) {
+    if (hasSizes && !hasColors && selectedSize) {
+      currentVariantKey = selectedSize;
+    } else if (!hasSizes && hasColors && selectedColor !== null) {
+      currentVariantKey = product.colorVariants[selectedColor].name;
+    } else if (hasSizes && hasColors && selectedSize && selectedColor !== null) {
+      currentVariantKey = `${product.colorVariants[selectedColor].name}_${selectedSize}`;
+    }
+
+    if (currentVariantKey && product.stockByVariant) {
+      currentStock = product.stockByVariant[currentVariantKey] !== undefined ? product.stockByVariant[currentVariantKey] : 0;
+    } else if (currentVariantKey && !product.stockByVariant) {
+      currentStock = 0; 
+    } else {
+      currentStock = product.stock || 0; 
+    }
+  }
+
   return (
     <main className={styles.main}>
       <div className={`container ${styles.productGrid}`}>
@@ -145,26 +166,37 @@ export default function ProductDetail() {
                    {t.product.size} {selectedSize && <span style={{ fontWeight: 400, color: '#666' }}>— {selectedSize}</span>}
                  </span>
                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                   {product.sizes!.map((size: string) => (
+                   {product.sizes!.map((size: string) => {
+                     const isOutOfStock = product.stockByVariant ? (
+                       hasColors && selectedColor !== null 
+                         ? product.stockByVariant[`${product.colorVariants[selectedColor].name}_${size}`] === 0
+                         : product.stockByVariant[size] === 0
+                     ) : false;
+                     
+                     return (
                      <button
                        key={size}
-                       onClick={() => setSelectedSize(size)}
+                       onClick={() => !isOutOfStock && setSelectedSize(size)}
+                       disabled={isOutOfStock}
                        style={{
                          padding: '0.5rem 1.2rem',
                          borderRadius: '6px',
                          border: selectedSize === size ? '2px solid #041e3a' : '1px solid #ddd',
                          background: selectedSize === size ? '#041e3a' : '#fff',
                          color: selectedSize === size ? '#fff' : '#333',
-                         cursor: 'pointer',
+                         cursor: isOutOfStock ? 'not-allowed' : 'pointer',
+                         opacity: isOutOfStock ? 0.4 : 1,
+                         textDecoration: isOutOfStock ? 'line-through' : 'none',
                          fontFamily: 'var(--font-inter)',
                          fontSize: '0.85rem',
                          fontWeight: 500,
                          transition: 'all 0.15s'
                        }}
+                       title={isOutOfStock ? t.product.outOfStock : ''}
                      >
                        {size}
                      </button>
-                   ))}
+                   )})}
                  </div>
                </div>
              )}
@@ -192,12 +224,12 @@ export default function ProductDetail() {
                  >+</button>
                </div>
                <span style={{ fontSize: '0.8rem', color: 'var(--muted-text)', textTransform: 'uppercase' }}>
-                 {(product.stock || 0) > 0 ? `${product.stock} ${t.product.inStock}` : t.product.outOfStock}
+                 {currentStock > 0 ? `${currentStock} ${t.product.inStock}` : t.product.outOfStock}
                </span>
              </div>
              
              {!showOrderForm && !orderSuccess && (
-                (product.stock || 0) > 0 ? (
+                currentStock > 0 ? (
                   <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     <button 
                       className={`btn-primary ${styles.addToCartBtn}`} 
@@ -211,6 +243,7 @@ export default function ProductDetail() {
                           quantity: quantity,
                           selectedSize: selectedSize || undefined,
                           selectedColor: localizedColor,
+                          variantKey: currentVariantKey,
                         });
                       }}
                       style={{ flex: 1 }}
@@ -244,6 +277,7 @@ export default function ProductDetail() {
                   productId={product.id as string} 
                   productName={localizedTitle} 
                   quantity={quantity}
+                  variantKey={currentVariantKey}
                   onSuccess={() => setOrderSuccess(true)} 
                   onCancel={() => setShowOrderForm(false)} 
                 />

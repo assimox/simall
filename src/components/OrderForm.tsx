@@ -10,11 +10,12 @@ type OrderFormProps = {
   productId: string;
   productName: string;
   quantity: number;
+  variantKey?: string;
   onSuccess: () => void;
   onCancel: () => void;
 };
 
-export default function OrderForm({ productId, productName, quantity, onSuccess, onCancel }: OrderFormProps) {
+export default function OrderForm({ productId, productName, quantity, variantKey, onSuccess, onCancel }: OrderFormProps) {
   const { t } = useLanguage();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -28,7 +29,7 @@ export default function OrderForm({ productId, productName, quantity, onSuccess,
     setSubmitting(true);
     
     try {
-      await addDoc(collection(db, 'orders'), {
+      const orderData: any = {
         productId,
         productName,
         quantity,
@@ -39,13 +40,18 @@ export default function OrderForm({ productId, productName, quantity, onSuccess,
         postalCode,
         status: 'pending',
         createdAt: serverTimestamp()
-      });
+      };
+      if (variantKey) orderData.variantKey = variantKey;
+
+      await addDoc(collection(db, 'orders'), orderData);
 
       // Send Telegram notification
       try {
         const botToken = '8717201973:AAHSbGw1LvkrL7FAaTpmMpWSYy10norSR-g';
         const chatId = '7769220796';
-        const message = `🛒 *طلب جديد!*\n\n📦 المنتج: ${productName}\n🔢 الكمية: ${quantity}\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}, ${city} ${postalCode}`;
+        let message = `🛒 *طلب جديد!*\n\n📦 المنتج: ${productName}\n`;
+        if (variantKey) message += `🏷️ الصنف: ${variantKey.replace('_', ' - ')}\n`;
+        message += `🔢 الكمية: ${quantity}\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}, ${city} ${postalCode}`;
         await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

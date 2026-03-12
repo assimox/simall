@@ -19,6 +19,7 @@ export interface Product {
   category: string;
   sizes?: string[];
   stock?: number;
+  stockByVariant?: Record<string, number>;
   colorVariants?: {
     name: string;
     nameFr?: string;
@@ -30,15 +31,18 @@ export interface Product {
 
 export interface Order {
   id?: string;
-  productId: string;
-  productName: string;
+  productId?: string;
+  productName?: string;
   quantity?: number;
+  items?: { productId: string, productName: string, quantity: number, price: number, variantKey?: string }[];
+  totalPrice?: number;
   customerName: string;
   phone: string;
   address: string;
   city: string;
   postalCode: string;
   status: string;
+  variantKey?: string;
   createdAt?: any;
 }
 
@@ -129,26 +133,57 @@ export async function updateOrderStatus(
     if (orderSnap.exists()) {
       const order = orderSnap.data() as Order;
       
+      let itemsToUpdate: any[] = [];
+      if (order.items && order.items.length > 0) {
+        itemsToUpdate = order.items;
+      } else if (order.productId) {
+        itemsToUpdate = [{
+          productId: order.productId,
+          quantity: order.quantity || 1,
+          variantKey: order.variantKey
+        }];
+      }
+
       // If confirming a non-confirmed order, deduct stock
       if (status === 'confirmed' && order.status !== 'confirmed') {
-        const productRef = doc(db, "products", order.productId);
-        const productSnap = await getDoc(productRef);
-        if (productSnap.exists()) {
-          const productData = productSnap.data() as Product;
-          const currentStock = productData.stock || 0;
-          const qty = order.quantity || 1;
-          await updateDoc(productRef, { stock: Math.max(0, currentStock - qty) });
+        for (const item of itemsToUpdate) {
+          const productRef = doc(db, "products", item.productId);
+          const productSnap = await getDoc(productRef);
+          if (productSnap.exists()) {
+            const productData = productSnap.data() as Product;
+            const qty = item.quantity || 1;
+
+            if (item.variantKey && productData.stockByVariant) {
+              const currentVariantStock = productData.stockByVariant[item.variantKey] || 0;
+              await updateDoc(productRef, {
+                [`stockByVariant.${item.variantKey}`]: Math.max(0, currentVariantStock - qty)
+              });
+            } else {
+              const currentStock = productData.stock || 0;
+              await updateDoc(productRef, { stock: Math.max(0, currentStock - qty) });
+            }
+          }
         }
       } 
       // If un-confirming an order, restore stock
       else if (order.status === 'confirmed' && status !== 'confirmed') {
-        const productRef = doc(db, "products", order.productId);
-        const productSnap = await getDoc(productRef);
-        if (productSnap.exists()) {
-          const productData = productSnap.data() as Product;
-          const currentStock = productData.stock || 0;
-          const qty = order.quantity || 1;
-          await updateDoc(productRef, { stock: currentStock + qty });
+        for (const item of itemsToUpdate) {
+          const productRef = doc(db, "products", item.productId);
+          const productSnap = await getDoc(productRef);
+          if (productSnap.exists()) {
+            const productData = productSnap.data() as Product;
+            const qty = item.quantity || 1;
+
+            if (item.variantKey && productData.stockByVariant) {
+              const currentVariantStock = productData.stockByVariant[item.variantKey] || 0;
+              await updateDoc(productRef, {
+                [`stockByVariant.${item.variantKey}`]: currentVariantStock + qty
+              });
+            } else {
+              const currentStock = productData.stock || 0;
+              await updateDoc(productRef, { stock: currentStock + qty });
+            }
+          }
         }
       }
     }

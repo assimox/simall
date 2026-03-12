@@ -33,6 +33,9 @@ export default function AddProduct() {
   const [newColorNameAr, setNewColorNameAr] = useState('');
   const [newColorImage, setNewColorImage] = useState('');
 
+  // Variant stock state
+  const [stockByVariant, setStockByVariant] = useState<Record<string, number>>({});
+
   const showOptions = CATEGORIES_WITH_OPTIONS.includes(formData.category);
 
   const addSize = () => {
@@ -80,6 +83,7 @@ export default function AddProduct() {
       if (formData.descriptionAr) productData.descriptionAr = formData.descriptionAr;
       if (showOptions && sizes.length > 0) productData.sizes = sizes;
       if (showOptions && colorVariants.length > 0) productData.colorVariants = colorVariants;
+      if (showOptions && Object.keys(stockByVariant).length > 0) productData.stockByVariant = stockByVariant;
 
       await addProduct(productData);
       router.push('/admin');
@@ -301,6 +305,64 @@ export default function AddProduct() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ========== VARIANT STOCK ========== */}
+          {showOptions && (sizes.length > 0 || colorVariants.length > 0) && (
+            <div className={styles.formGroup}>
+              <label>📦 Stock per Variant</label>
+              <div style={{ background: '#f8f9fa', padding: '1rem', border: '1px solid #eee', borderRadius: '8px' }}>
+                <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ paddingBottom: '0.5rem', borderBottom: '1px solid #ddd' }}>Color / Size</th>
+                      <th style={{ paddingBottom: '0.5rem', borderBottom: '1px solid #ddd', width: '110px' }}>Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(() => {
+                      const keys: string[] = [];
+                      if (sizes.length > 0 && colorVariants.length === 0) {
+                        sizes.forEach(s => keys.push(s));
+                      } else if (sizes.length === 0 && colorVariants.length > 0) {
+                        colorVariants.forEach(c => keys.push(c.name));
+                      } else {
+                        colorVariants.forEach(c => {
+                          sizes.forEach(s => keys.push(`${c.name}_${s}`));
+                        });
+                      }
+
+                      return keys.map(key => (
+                        <tr key={key}>
+                          <td style={{ paddingTop: '0.5rem', fontWeight: 500, fontSize: '0.9rem', color: '#333' }}>
+                            {key.replace('_', ' — ')}
+                          </td>
+                          <td style={{ paddingTop: '0.5rem' }}>
+                            <input
+                              type="number"
+                              min="0"
+                              className={styles.input}
+                              style={{ padding: '0.5rem', margin: 0, width: '100%' }}
+                              value={stockByVariant[key] !== undefined ? stockByVariant[key] : ''}
+                              onChange={(e) => {
+                                const val = e.target.value === '' ? undefined : parseInt(e.target.value);
+                                setStockByVariant(prev => {
+                                  const next = { ...prev };
+                                  if (val === undefined) delete next[key];
+                                  else next[key] = val;
+                                  return next;
+                                });
+                              }}
+                              placeholder="0"
+                            />
+                          </td>
+                        </tr>
+                      ));
+                    })()}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 
