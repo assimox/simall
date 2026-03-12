@@ -99,7 +99,7 @@ export default function Home() {
           <p className={styles.followText}>{t.home.followUs}</p>
           <div className={styles.socialRow}>
             {/* TikTok */}
-            <a href="/coming-soon" className={styles.socialIcon} title="TikTok">
+            <a href="https://www.tiktok.com/@simall953" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} title="TikTok">
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.79a4.85 4.85 0 0 1-1.01-.1z"/>
               </svg>
@@ -113,7 +113,7 @@ export default function Home() {
               </svg>
             </a>
             {/* Facebook */}
-            <a href="/coming-soon" className={styles.socialIcon} title="Facebook">
+            <a href="https://www.facebook.com/share/17APia6u7o/?mibextid=wwXlfr" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} title="Facebook">
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
               </svg>
