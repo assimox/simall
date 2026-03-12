@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, Center, Environment, OrbitControls, Float, ContactShadows, Html, PerspectiveCamera } from '@react-three/drei';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import Image from 'next/image';
 
 function Model({ url, scale = 1, position = [0, 0, 0] }: { url: string, scale?: number, position?: [number, number, number] }) {
   const { scene } = useGLTF(url);
@@ -125,14 +126,21 @@ export default function AnimatedHero() {
                animate={{ scale: 1.06 }}
                transition={{ duration: 10, ease: "linear" }}
                style={{ 
+                 position: 'absolute',
+                 inset: 0,
                  width: '100%', 
                  height: '100%', 
-                 backgroundImage: `url(${slide.src || '/images/streetwear.jpg.png'})`, 
-                 backgroundSize: 'cover', 
-                 backgroundPosition: 'center',
-                 filter: 'brightness(0.5)'
                }} 
-             />
+             >
+               <Image 
+                 src={slide.src || '/images/streetwear.jpg.png'}
+                 alt="Hero Banner"
+                 fill
+                 sizes="100vw"
+                 priority
+                 style={{ objectFit: 'cover', filter: 'brightness(0.5)' }}
+               />
+             </motion.div>
           )}
 
           {slide.type === '3d' && slide.model && (

@@ -1,11 +1,19 @@
 'use client';
 import styles from './page.module.css';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useState } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import AnimatedHero from '@/components/AnimatedHero';
 
 export default function Home() {
   const { t } = useLanguage();
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+
+  const handleImageLoad = (id: string) => {
+    setLoadedImages(prev => new Set(prev).add(id));
+  };
+
   return (
     <main className={styles.main}>
       {/* Hero Section */}
@@ -20,38 +28,63 @@ export default function Home() {
          <div className={styles.grid}>
            {/* Old Money Aesthetic */}
            <Link href="/shop?category=oldmoney" className={styles.card}>
-             <div className={styles.cardImageHolder} style={{ backgroundImage: "url('/images/old-money.jpg.png')" }}></div>
+             <div className={styles.cardImageHolder}>
+               {!loadedImages.has('cat-oldmoney') && <div className={styles.skeleton}></div>}
+               <Image src="/images/old-money.jpg.png" alt={t.home.oldMoney} fill sizes="(max-width: 768px) 100vw, 33vw" className={styles.cardImage} onLoad={() => handleImageLoad('cat-oldmoney')} priority />
+             </div>
              <h4 className={styles.cardTitle}>{t.home.oldMoney}</h4>
            </Link>
            
            {/* Streetwear Aesthetic */}
            <Link href="/shop?category=streetwear" className={styles.card}>
-             <div className={styles.cardImageHolder} style={{ backgroundImage: "url('/images/streetwear.jpg.png')" }}></div>
+             <div className={styles.cardImageHolder}>
+               {!loadedImages.has('cat-streetwear') && <div className={styles.skeleton}></div>}
+               <Image src="/images/streetwear.jpg.png" alt={t.home.streetWear} fill sizes="(max-width: 768px) 100vw, 33vw" className={styles.cardImage} onLoad={() => handleImageLoad('cat-streetwear')} priority />
+             </div>
              <h4 className={styles.cardTitle}>{t.home.streetWear}</h4>
            </Link>
            
            {/* Vintage / Accesories */}
            <Link href="/shop?category=accessories" className={styles.card}>
-             <div className={styles.cardImageHolder} style={{ backgroundImage: "url('/images/accessories.jpg.png')" }}></div>
+             <div className={styles.cardImageHolder}>
+               {!loadedImages.has('cat-accessories') && <div className={styles.skeleton}></div>}
+               <Image src="/images/accessories.jpg.png" alt={t.home.accessories} fill sizes="(max-width: 768px) 100vw, 33vw" className={styles.cardImage} onLoad={() => handleImageLoad('cat-accessories')} priority />
+             </div>
              <h4 className={styles.cardTitle}>{t.home.accessories}</h4>
            </Link>
            
            {/* Shoes */}
            <Link href="/shop?category=shoes" className={styles.card}>
-             <div className={styles.cardImageHolder} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop')" }}></div>
+             <div className={styles.cardImageHolder}>
+               {!loadedImages.has('cat-shoes') && <div className={styles.skeleton}></div>}
+               <Image src="https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=2069&auto=format&fit=crop" alt={t.home.shoes} fill sizes="(max-width: 768px) 100vw, 33vw" className={styles.cardImage} onLoad={() => handleImageLoad('cat-shoes')} priority />
+             </div>
              <h4 className={styles.cardTitle}>{t.home.shoes}</h4>
            </Link>
 
            {/* Fragrances */}
            <Link href="/shop?category=fragrances" className={styles.card}>
-             <div className={styles.cardImageHolder} style={{ backgroundImage: "url('/images/fragrances.jpg.png')" }}></div>
+             <div className={styles.cardImageHolder}>
+               {!loadedImages.has('cat-fragrances') && <div className={styles.skeleton}></div>}
+               <Image src="/images/fragrances.jpg.png" alt={t.home.fragrances} fill sizes="(max-width: 768px) 100vw, 33vw" className={styles.cardImage} onLoad={() => handleImageLoad('cat-fragrances')} priority />
+             </div>
              <h4 className={styles.cardTitle}>{t.home.fragrances}</h4>
            </Link>
          </div>
       </section>
       
       {/* Brand Value Section */}
-      <section className={styles.brandHero} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop')" }}>
+      <section className={styles.brandHero}>
+        {!loadedImages.has('brand-hero') && <div className={styles.skeleton}></div>}
+        <Image 
+          src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop" 
+          alt="Brand Heritage" 
+          fill 
+          sizes="100vw" 
+          className={styles.brandImage} 
+          onLoad={() => handleImageLoad('brand-hero')} 
+          style={{ objectPosition: 'center' }}
+        />
         <div className={styles.brandContent}>
           <div className="decorative-line fade-in-up" style={{ margin: '0 auto 2rem auto', backgroundColor: 'var(--background)' }}></div>
           <h3 className="fade-in-up" style={{ color: 'var(--background)' }}>{t.home.heritageTitle}</h3>

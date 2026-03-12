@@ -118,15 +118,34 @@
 }
 
 .cardImageHolder {
+  position: relative;
   height: 550px;
   background-color: var(--muted);
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
+}
+
+.cardImage {
+  object-fit: cover;
   transition: transform var(--transition-slow);
 }
 
-.card:hover .cardImageHolder {
+.card:hover .cardImage {
   transform: scale(1.02);
+}
+
+/* ========== Skeleton Shimmer ========== */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  z-index: 2;
 }
 
 .cardTitle {
@@ -142,13 +161,12 @@
 }
 
 .brandHero {
+  position: relative;
   height: 60vh;
   background-color: var(--accent);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
   color: var(--foreground);
   display: flex;
+  overflow: hidden;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -156,12 +174,19 @@
 }
 
 .brandContent {
+  position: relative;
+  z-index: 10;
   max-width: 600px;
 }
 
 .brandContent h3 {
   font-size: 3rem;
   margin-bottom: 1.5rem;
+}
+
+.brandImage {
+  object-fit: cover;
+  z-index: 1;
 }
 
 .brandContent p {
