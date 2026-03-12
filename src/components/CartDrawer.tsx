@@ -43,7 +43,13 @@ export default function CartDrawer() {
       try {
         const botToken = '8717201973:AAHSbGw1LvkrL7FAaTpmMpWSYy10norSR-g';
         const chatId = '7769220796';
-        const itemsList = items.map(i => `  • ${i.title} × ${i.quantity} = ${(i.price * i.quantity).toFixed(2)} MAD`).join('\n');
+        const itemsList = items.map(i => {
+          let line = `  • ${i.title}`;
+          if (i.selectedSize) line += ` | Size: ${i.selectedSize}`;
+          if (i.selectedColor) line += ` | Color: ${i.selectedColor}`;
+          line += ` × ${i.quantity} = ${(i.price * i.quantity).toFixed(2)} MAD`;
+          return line;
+        }).join('\n');
         const message = `🛒 *طلب جديد من السلة!*\n\n📦 *المنتجات:*\n${itemsList}\n\n💰 *المجموع: ${totalPrice.toFixed(2)} MAD*\n\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}, ${city} ${postalCode}`;
         await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
           method: 'POST',
@@ -181,6 +187,13 @@ export default function CartDrawer() {
                     <img src={item.imageUrl} alt={item.title} className={styles.itemImage} />
                     <div className={styles.itemInfo}>
                       <h4>{item.title}</h4>
+                      {(item.selectedSize || item.selectedColor) && (
+                        <span style={{ fontSize: '0.75rem', color: '#888', fontFamily: 'var(--font-inter)' }}>
+                          {item.selectedSize && `Size: ${item.selectedSize}`}
+                          {item.selectedSize && item.selectedColor && ' | '}
+                          {item.selectedColor && `Color: ${item.selectedColor}`}
+                        </span>
+                      )}
                       <p className={styles.itemPrice}>{item.price.toFixed(2)} MAD</p>
                       <div className={styles.quantityRow}>
                         <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>−</button>

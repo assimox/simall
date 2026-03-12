@@ -1,6 +1,11 @@
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "./firebase";
 
+export interface ColorVariant {
+  name: string;
+  imageUrl: string;
+}
+
 export interface Product {
   id?: string;
   title: string;
@@ -9,6 +14,8 @@ export interface Product {
   imageUrl: string;
   category?: string;
   stock?: number;
+  sizes?: string[];
+  colorVariants?: ColorVariant[];
   createdAt?: any;
 }
 

@@ -16,17 +16,29 @@ export default function ProductDetail() {
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<number | null>(null);
+  const [displayImage, setDisplayImage] = useState('');
 
   useEffect(() => {
     async function load() {
       if (typeof id === 'string') {
         const data = await getProductById(id);
         setProduct(data);
+        if (data) {
+          setDisplayImage(data.imageUrl || '');
+        }
       }
       setLoading(false);
     }
     load();
   }, [id]);
+
+  const handleColorSelect = (index: number) => {
+    if (!product?.colorVariants) return;
+    setSelectedColor(index);
+    setDisplayImage(product.colorVariants[index].imageUrl);
+  };
 
   if (loading) {
     return (
@@ -47,15 +59,51 @@ export default function ProductDetail() {
     );
   }
 
+  const hasSizes = product.sizes && product.sizes.length > 0;
+  const hasColors = product.colorVariants && product.colorVariants.length > 0;
+
   return (
     <main className={styles.main}>
       <div className={`container ${styles.productGrid}`}>
          <div className={`fade-in-up ${styles.imageCol}`}>
             <img 
-              src={product.imageUrl || 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80'} 
+              src={displayImage || product.imageUrl || 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80'} 
               alt={product.title} 
               className={styles.productImage}
             />
+
+            {/* Color variant thumbnails below main image */}
+            {hasColors && (
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+                {/* Default image thumbnail */}
+                <button
+                  onClick={() => { setSelectedColor(null); setDisplayImage(product.imageUrl); }}
+                  style={{
+                    width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden',
+                    border: selectedColor === null ? '2px solid #041e3a' : '2px solid #eee',
+                    cursor: 'pointer', padding: 0, background: 'none',
+                    transition: 'border-color 0.2s'
+                  }}
+                >
+                  <img src={product.imageUrl} alt="Default" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </button>
+                {product.colorVariants!.map((cv, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleColorSelect(i)}
+                    title={cv.name}
+                    style={{
+                      width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden',
+                      border: selectedColor === i ? '2px solid #041e3a' : '2px solid #eee',
+                      cursor: 'pointer', padding: 0, background: 'none',
+                      transition: 'border-color 0.2s'
+                    }}
+                  >
+                    <img src={cv.imageUrl} alt={cv.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </button>
+                ))}
+              </div>
+            )}
          </div>
          <div className={`fade-in-up ${styles.infoCol}`} style={{ animationDelay: '0.2s' }}>
             <h1 className={styles.title}>{product.title}</h1>
@@ -63,8 +111,48 @@ export default function ProductDetail() {
              <div className={styles.description}>
                <p>{product.description}</p>
              </div>
+
+             {/* ========== SIZE SELECTOR ========== */}
+             {hasSizes && (
+               <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
+                 <span style={{ fontWeight: 600, fontFamily: 'var(--font-inter)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '0.6rem' }}>
+                   SIZE {selectedSize && <span style={{ fontWeight: 400, color: '#666' }}>— {selectedSize}</span>}
+                 </span>
+                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                   {product.sizes!.map((size) => (
+                     <button
+                       key={size}
+                       onClick={() => setSelectedSize(size)}
+                       style={{
+                         padding: '0.5rem 1.2rem',
+                         borderRadius: '6px',
+                         border: selectedSize === size ? '2px solid #041e3a' : '1px solid #ddd',
+                         background: selectedSize === size ? '#041e3a' : '#fff',
+                         color: selectedSize === size ? '#fff' : '#333',
+                         cursor: 'pointer',
+                         fontFamily: 'var(--font-inter)',
+                         fontSize: '0.85rem',
+                         fontWeight: 500,
+                         transition: 'all 0.15s'
+                       }}
+                     >
+                       {size}
+                     </button>
+                   ))}
+                 </div>
+               </div>
+             )}
+
+             {/* ========== COLOR NAME DISPLAY ========== */}
+             {hasColors && selectedColor !== null && (
+               <div style={{ marginBottom: '0.5rem' }}>
+                 <span style={{ fontWeight: 600, fontFamily: 'var(--font-inter)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                   COLOR — <span style={{ fontWeight: 400, color: '#666' }}>{product.colorVariants![selectedColor].name}</span>
+                 </span>
+               </div>
+             )}
              
-             <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+             <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
                <span style={{ fontWeight: 500, fontFamily: 'var(--font-inter)', fontSize: '0.9rem' }}>QUANTITY</span>
                <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--border)', borderRadius: '9999px', overflow: 'hidden' }}>
                  <button 
@@ -87,20 +175,28 @@ export default function ProductDetail() {
                   <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     <button 
                       className={`btn-primary ${styles.addToCartBtn}`} 
-                      onClick={() => addToCart({
-                        id: product.id as string,
-                        title: product.title,
-                        price: typeof product.price === 'number' ? product.price : parseFloat(product.price),
-                        imageUrl: product.imageUrl || 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=500&q=80',
-                        quantity: quantity
-                      })}
+                      onClick={() => {
+                        if (hasSizes && !selectedSize) { alert('Please select a size'); return; }
+                        addToCart({
+                          id: product.id as string,
+                          title: product.title,
+                          price: typeof product.price === 'number' ? product.price : parseFloat(product.price),
+                          imageUrl: displayImage || product.imageUrl || 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=500&q=80',
+                          quantity: quantity,
+                          selectedSize: selectedSize || undefined,
+                          selectedColor: selectedColor !== null ? product.colorVariants![selectedColor].name : undefined,
+                        });
+                      }}
                       style={{ flex: 1 }}
                     >
                       {t.product.addToBag}
                     </button>
                     <button 
                       className={`btn-primary ${styles.addToCartBtn}`} 
-                      onClick={() => setShowOrderForm(true)}
+                      onClick={() => {
+                        if (hasSizes && !selectedSize) { alert('Please select a size'); return; }
+                        setShowOrderForm(true);
+                      }}
                       style={{ flex: 1, background: 'transparent', color: '#041e3a', border: '1px solid #041e3a' }}
                     >
                       {t.product.buyNow}
