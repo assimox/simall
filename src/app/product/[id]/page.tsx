@@ -26,7 +26,13 @@ export default function ProductDetail() {
         const data = await getProductById(id);
         setProduct(data);
         if (data) {
-          setDisplayImage(data.imageUrl || '');
+          // Auto-select first color variant if exists
+          if (data.colorVariants && data.colorVariants.length > 0) {
+            setSelectedColor(0);
+            setDisplayImage(data.colorVariants[0].imageUrl);
+          } else {
+            setDisplayImage(data.imageUrl || '');
+          }
         }
       }
       setLoading(false);
@@ -75,18 +81,6 @@ export default function ProductDetail() {
             {/* Color variant thumbnails below main image */}
             {hasColors && (
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
-                {/* Default image thumbnail */}
-                <button
-                  onClick={() => { setSelectedColor(null); setDisplayImage(product.imageUrl); }}
-                  style={{
-                    width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden',
-                    border: selectedColor === null ? '2px solid #041e3a' : '2px solid #eee',
-                    cursor: 'pointer', padding: 0, background: 'none',
-                    transition: 'border-color 0.2s'
-                  }}
-                >
-                  <img src={product.imageUrl} alt="Default" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </button>
                 {product.colorVariants!.map((cv, i) => (
                   <button
                     key={i}
