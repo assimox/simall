@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, serverTimestamp, writeBatch } from "firebase/firestore";
 import { db } from "./firebase";
 
 export interface ColorVariant {
@@ -43,6 +43,7 @@ export interface Order {
   postalCode: string;
   status: string;
   variantKey?: string;
+  exportedToShipping?: boolean;
   createdAt?: any;
 }
 
@@ -191,6 +192,20 @@ export async function updateOrderStatus(
     await updateDoc(orderRef, { status });
   } catch (error) {
     console.error("Error updating order status", error);
+    throw error;
+  }
+}
+
+export async function markOrdersAsExported(orderIds: string[]) {
+  try {
+    const batch = writeBatch(db);
+    orderIds.forEach(id => {
+      const orderRef = doc(db, "orders", id);
+      batch.update(orderRef, { exportedToShipping: true });
+    });
+    await batch.commit();
+  } catch (error) {
+    console.error("Error batch updating orders as exported", error);
     throw error;
   }
 }
