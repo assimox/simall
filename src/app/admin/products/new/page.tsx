@@ -57,7 +57,7 @@ export default function AddProduct() {
         title: formData.title,
         description: formData.description,
         price: parseFloat(formData.price),
-        imageUrl: formData.imageUrl,
+        imageUrl: showOptions && colorVariants.length > 0 ? colorVariants[0].imageUrl : formData.imageUrl,
         category: formData.category,
         stock: parseInt(formData.stock) || 0
       };
@@ -119,18 +119,21 @@ export default function AddProduct() {
             />
           </div>
 
+          {/* Only show Image URL for categories without color variants */}
+          {!showOptions && (
           <div className={styles.formGroup}>
             <label>Image URL</label>
             <input 
               type="url" 
               className={styles.input} 
-              required
+              required={!showOptions}
               value={formData.imageUrl}
               onChange={e => setFormData({...formData, imageUrl: e.target.value})}
               placeholder="e.g. https://images.unsplash.com/..."
             />
             <span className={styles.helpText}>For this setup, please provide a direct URL to an image.</span>
           </div>
+          )}
 
           <div className={styles.formGroup}>
             <label>Collection / Category</label>

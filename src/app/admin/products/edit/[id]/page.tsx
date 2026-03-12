@@ -77,7 +77,7 @@ export default function EditProduct() {
         title: formData.title,
         description: formData.description,
         price: parseFloat(formData.price),
-        imageUrl: formData.imageUrl,
+        imageUrl: showOptions && colorVariants.length > 0 ? colorVariants[0].imageUrl : formData.imageUrl,
         category: formData.category,
         stock: parseInt(formData.stock) || 0,
       };
@@ -139,16 +139,18 @@ export default function EditProduct() {
             />
           </div>
 
+          {!showOptions && (
           <div className={styles.formGroup}>
             <label>Image URL</label>
             <input
               type="url"
               className={styles.input}
-              required
+              required={!showOptions}
               value={formData.imageUrl}
               onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
             />
           </div>
+          )}
 
           <div className={styles.formGroup}>
             <label>Collection / Category</label>
