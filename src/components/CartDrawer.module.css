@@ -208,3 +208,64 @@
   background: #e8e8e8;
   border-color: #ccc;
 }
+
+.buyNowBtn {
+  width: 100%;
+  padding: 0.9rem;
+  background: #041e3a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-inter);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.25s;
+  margin-bottom: 0;
+}
+.buyNowBtn:hover {
+  background: #0a2e52;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(4, 30, 58, 0.3);
+}
+.buyNowBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.formGroup {
+  margin-bottom: 0.85rem;
+}
+.formGroup label {
+  display: block;
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #041e3a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.35rem;
+}
+.formGroup input {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: var(--font-inter);
+  font-size: 0.88rem;
+  color: #333;
+  background: #fafafa;
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
+  box-sizing: border-box;
+}
+.formGroup input:focus {
+  border-color: #041e3a;
+  background: #fff;
+}
+.formGroup input::placeholder {
+  color: #bbb;
+}
