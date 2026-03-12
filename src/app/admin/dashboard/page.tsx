@@ -42,7 +42,8 @@ export default function DashboardPage() {
           
           const product = productsData.find(p => p.id === order.productId);
           // If the product exists, use its price, otherwise 0
-          const price = product?.price || 0;
+          const rawPrice = product?.price || 0;
+          const price = typeof rawPrice === 'number' ? rawPrice : parseFloat(rawPrice as string);
           const qty = order.quantity || 1;
           const orderRevenue = price * qty;
           revenue += orderRevenue;
