@@ -29,9 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* Meta Pixel Code */}
-        <Script id="meta-pixel" strategy="afterInteractive">
+      <body className={`${inter.variable} ${playfair.variable}`}>
+        {/* Meta Pixel Code - raw script tag */}
+        <Script id="meta-pixel-base" strategy="beforeInteractive">
           {`
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -48,8 +48,6 @@ export default function RootLayout({
         <noscript>
           <img height="1" width="1" style={{display:'none'}} src="https://www.facebook.com/tr?id=1248423410735431&ev=PageView&noscript=1" alt="" />
         </noscript>
-      </head>
-      <body className={`${inter.variable} ${playfair.variable}`}>
         <LanguageProvider>
         <CartProvider>
           <div className="top-banner">
