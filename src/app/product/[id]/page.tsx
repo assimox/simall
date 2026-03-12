@@ -10,9 +10,9 @@ import Image from 'next/image';
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { addToCart } = useCart();
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
@@ -73,6 +73,16 @@ export default function ProductDetail() {
   const hasSizes = product.sizes && product.sizes.length > 0;
   const hasColors = product.colorVariants && product.colorVariants.length > 0;
 
+  const localizedTitle = language === 'fr' && product.titleFr ? product.titleFr : language === 'ar' && product.titleAr ? product.titleAr : product.title;
+  const localizedDesc = language === 'fr' && product.descriptionFr ? product.descriptionFr : language === 'ar' && product.descriptionAr ? product.descriptionAr : product.description;
+  const localizedColor = hasColors && selectedColor !== null 
+    ? (language === 'fr' && product.colorVariants[selectedColor].nameFr 
+        ? product.colorVariants[selectedColor].nameFr 
+        : language === 'ar' && product.colorVariants[selectedColor].nameAr
+        ? product.colorVariants[selectedColor].nameAr
+        : product.colorVariants[selectedColor].name)
+    : undefined;
+
   return (
     <main className={styles.main}>
       <div className={`container ${styles.productGrid}`}>
@@ -93,7 +103,7 @@ export default function ProductDetail() {
             {/* Color variant thumbnails below main image */}
             {hasColors && (
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
-                {product.colorVariants!.map((cv, i) => (
+                {product.colorVariants!.map((cv: any, i: number) => (
                   <button
                     key={i}
                     onClick={() => handleColorSelect(i)}
@@ -121,11 +131,11 @@ export default function ProductDetail() {
               </div>
             )}
          </div>
-         <div className={`fade-in-up ${styles.infoCol}`} style={{ animationDelay: '0.2s' }}>
-            <h1 className={styles.title}>{product.title}</h1>
+         <div className={`fade-in-up ${styles.infoCol}`} style={{ animationDelay: '0.2s', textAlign: language === 'ar' ? 'right' : 'left' }}>
+            <h1 className={styles.title}>{localizedTitle}</h1>
             <p className={styles.price}>{typeof product.price === 'number' ? product.price.toFixed(2) : product.price} MAD</p>
              <div className={styles.description}>
-               <p>{product.description}</p>
+               <p>{localizedDesc}</p>
              </div>
 
              {/* ========== SIZE SELECTOR ========== */}
@@ -135,7 +145,7 @@ export default function ProductDetail() {
                    {t.product.size} {selectedSize && <span style={{ fontWeight: 400, color: '#666' }}>— {selectedSize}</span>}
                  </span>
                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                   {product.sizes!.map((size) => (
+                   {product.sizes!.map((size: string) => (
                      <button
                        key={size}
                        onClick={() => setSelectedSize(size)}
@@ -163,7 +173,7 @@ export default function ProductDetail() {
              {hasColors && selectedColor !== null && (
                <div style={{ marginBottom: '0.5rem' }}>
                  <span style={{ fontWeight: 600, fontFamily: 'var(--font-inter)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                   {t.product.color} — <span style={{ fontWeight: 400, color: '#666' }}>{product.colorVariants![selectedColor].name}</span>
+                   {t.product.color} — <span style={{ fontWeight: 400, color: '#666' }}>{localizedColor}</span>
                  </span>
                </div>
              )}
@@ -195,12 +205,12 @@ export default function ProductDetail() {
                         if (hasSizes && !selectedSize) { alert(t.product.selectSize); return; }
                         addToCart({
                           id: product.id as string,
-                          title: product.title,
+                          title: localizedTitle,
                           price: typeof product.price === 'number' ? product.price : parseFloat(product.price),
                           imageUrl: displayImage || product.imageUrl || 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=500&q=80',
                           quantity: quantity,
                           selectedSize: selectedSize || undefined,
-                          selectedColor: selectedColor !== null ? product.colorVariants![selectedColor].name : undefined,
+                          selectedColor: localizedColor,
                         });
                       }}
                       style={{ flex: 1 }}
@@ -232,7 +242,7 @@ export default function ProductDetail() {
              {showOrderForm && !orderSuccess && (
                 <OrderForm 
                   productId={product.id as string} 
-                  productName={product.title} 
+                  productName={localizedTitle} 
                   quantity={quantity}
                   onSuccess={() => setOrderSuccess(true)} 
                   onCancel={() => setShowOrderForm(false)} 

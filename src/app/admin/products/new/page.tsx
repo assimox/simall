@@ -11,7 +11,11 @@ export default function AddProduct() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
+    titleFr: '',
+    titleAr: '',
     description: '',
+    descriptionFr: '',
+    descriptionAr: '',
     price: '',
     imageUrl: '',
     category: '',
@@ -23,8 +27,10 @@ export default function AddProduct() {
   const [newSize, setNewSize] = useState('');
 
   // Color variants state
-  const [colorVariants, setColorVariants] = useState<ColorVariant[]>([]);
+  const [colorVariants, setColorVariants] = useState<any[]>([]);
   const [newColorName, setNewColorName] = useState('');
+  const [newColorNameFr, setNewColorNameFr] = useState('');
+  const [newColorNameAr, setNewColorNameAr] = useState('');
   const [newColorImage, setNewColorImage] = useState('');
 
   const showOptions = CATEGORIES_WITH_OPTIONS.includes(formData.category);
@@ -41,8 +47,15 @@ export default function AddProduct() {
 
   const addColor = () => {
     if (newColorName.trim() && newColorImage.trim()) {
-      setColorVariants([...colorVariants, { name: newColorName.trim(), imageUrl: newColorImage.trim() }]);
+      setColorVariants([...colorVariants, { 
+        name: newColorName.trim(), 
+        nameFr: newColorNameFr.trim(),
+        nameAr: newColorNameAr.trim(),
+        imageUrl: newColorImage.trim() 
+      }]);
       setNewColorName('');
+      setNewColorNameFr('');
+      setNewColorNameAr('');
       setNewColorImage('');
     }
   };
@@ -55,12 +68,16 @@ export default function AddProduct() {
     try {
       const productData: any = {
         title: formData.title,
-        description: formData.description,
         price: parseFloat(formData.price),
+        description: formData.description,
         imageUrl: showOptions && colorVariants.length > 0 ? colorVariants[0].imageUrl : formData.imageUrl,
         category: formData.category,
         stock: parseInt(formData.stock) || 0
       };
+      if (formData.titleFr) productData.titleFr = formData.titleFr;
+      if (formData.titleAr) productData.titleAr = formData.titleAr;
+      if (formData.descriptionFr) productData.descriptionFr = formData.descriptionFr;
+      if (formData.descriptionAr) productData.descriptionAr = formData.descriptionAr;
       if (showOptions && sizes.length > 0) productData.sizes = sizes;
       if (showOptions && colorVariants.length > 0) productData.colorVariants = colorVariants;
 
@@ -83,7 +100,7 @@ export default function AddProduct() {
       <div className={styles.formCard}>
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label>Product Title</label>
+            <label>Product Title (English) *</label>
             <input 
               type="text" 
               className={styles.input} 
@@ -91,6 +108,27 @@ export default function AddProduct() {
               value={formData.title}
               onChange={e => setFormData({...formData, title: e.target.value})}
               placeholder="e.g. Classic Oxford Shirt"
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Product Title (French) <span style={{fontSize:'0.8rem', color:'#888'}}>- Optional</span></label>
+            <input 
+              type="text" 
+              className={styles.input} 
+              value={formData.titleFr}
+              onChange={e => setFormData({...formData, titleFr: e.target.value})}
+              placeholder="e.g. Chemise Oxford Classique"
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Product Title (Arabic) <span style={{fontSize:'0.8rem', color:'#888'}}>- Optional</span></label>
+            <input 
+              type="text" 
+              className={styles.input} 
+              value={formData.titleAr}
+              onChange={e => setFormData({...formData, titleAr: e.target.value})}
+              placeholder="e.g. قميص أكسفورد كلاسيكي"
+              dir="rtl"
             />
           </div>
 
@@ -195,43 +233,70 @@ export default function AddProduct() {
           {showOptions && (
             <div className={styles.formGroup}>
               <label>🎨 Color Variants</label>
-              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-                <input
-                  type="text"
-                  className={styles.input}
-                  value={newColorName}
-                  onChange={e => setNewColorName(e.target.value)}
-                  placeholder="Color name (e.g. Black)"
-                  style={{ flex: '1 1 120px' }}
-                />
-                <input
-                  type="url"
-                  className={styles.input}
-                  value={newColorImage}
-                  onChange={e => setNewColorImage(e.target.value)}
-                  placeholder="Image URL for this color"
-                  style={{ flex: '2 1 200px' }}
-                />
-                <button type="button" onClick={addColor} className="btn-primary" style={{ padding: '0.5rem 1rem', whiteSpace: 'nowrap' }}>
-                  + Add
-                </button>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem', background: '#f8f9fa', padding: '1rem', border: '1px solid #eee', borderRadius: '8px' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={newColorName}
+                    onChange={e => setNewColorName(e.target.value)}
+                    placeholder="Color Name (EN) *"
+                    style={{ flex: '1 1 120px' }}
+                  />
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={newColorNameFr}
+                    onChange={e => setNewColorNameFr(e.target.value)}
+                    placeholder="Color Name (FR) - Optional"
+                    style={{ flex: '1 1 120px' }}
+                  />
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={newColorNameAr}
+                    onChange={e => setNewColorNameAr(e.target.value)}
+                    placeholder="Color Name (AR) - Optional"
+                    style={{ flex: '1 1 120px' }}
+                    dir="rtl"
+                  />
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    type="url"
+                    className={styles.input}
+                    value={newColorImage}
+                    onChange={e => setNewColorImage(e.target.value)}
+                    placeholder="Image URL for this color *"
+                    style={{ flex: 1 }}
+                  />
+                  <button type="button" onClick={addColor} className="btn-primary" style={{ padding: '0.5rem 1.5rem', whiteSpace: 'nowrap' }}>
+                    + Add Color
+                  </button>
+                </div>
               </div>
+
               {colorVariants.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {colorVariants.map((c, i) => (
                     <div key={i} style={{
                       display: 'flex', alignItems: 'center', gap: '0.75rem',
-                      background: '#f9f9f9', padding: '0.5rem 0.75rem', borderRadius: '10px',
-                      border: '1px solid #eee'
+                      background: '#fff', padding: '0.5rem 0.75rem', borderRadius: '8px',
+                      border: '1px solid #eee', boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
                     }}>
                       <img src={c.imageUrl} alt={c.name} style={{
                         width: '40px', height: '40px', objectFit: 'cover', borderRadius: '6px'
                       }} />
-                      <span style={{ flex: 1, fontWeight: 500, fontSize: '0.9rem' }}>{c.name}</span>
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>{c.name}</span>
+                        <span style={{ fontSize: '0.75rem', color: '#666' }}>FR: {c.nameFr || '-'} | AR: {c.nameAr || '-'}</span>
+                      </div>
                       <button type="button" onClick={() => removeColor(i)} style={{
-                        background: 'none', border: 'none', cursor: 'pointer', color: '#e74c3c',
-                        fontWeight: 700, fontSize: '1.1rem', padding: 0
-                      }}>×</button>
+                        background: '#ffebee', border: '1px solid #ffcdd2', cursor: 'pointer', color: '#e74c3c',
+                        fontWeight: 700, fontSize: '1.2rem', width: '30px', height: '30px', borderRadius: '50%',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }} title="Remove color">×</button>
                     </div>
                   ))}
                 </div>
@@ -240,13 +305,32 @@ export default function AddProduct() {
           )}
 
           <div className={styles.formGroup}>
-            <label>Description</label>
+            <label>Description (English) *</label>
             <textarea 
               className={`${styles.input} ${styles.textarea}`} 
               required
               value={formData.description}
               onChange={e => setFormData({...formData, description: e.target.value})}
               placeholder="Detailed product description..."
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Description (French) <span style={{fontSize:'0.8rem', color:'#888'}}>- Optional</span></label>
+            <textarea 
+              className={`${styles.input} ${styles.textarea}`} 
+              value={formData.descriptionFr}
+              onChange={e => setFormData({...formData, descriptionFr: e.target.value})}
+              placeholder="Description détaillée du produit..."
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Description (Arabic) <span style={{fontSize:'0.8rem', color:'#888'}}>- Optional</span></label>
+            <textarea 
+              className={`${styles.input} ${styles.textarea}`} 
+              value={formData.descriptionAr}
+              onChange={e => setFormData({...formData, descriptionAr: e.target.value})}
+              placeholder="وصف مفصل للمنتج..."
+              dir="rtl"
             />
           </div>
 

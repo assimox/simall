@@ -9,13 +9,22 @@ export interface ColorVariant {
 export interface Product {
   id?: string;
   title: string;
+  titleFr?: string;
+  titleAr?: string;
+  price: string | number;
   description: string;
-  price: number;
-  imageUrl: string;
-  category?: string;
-  stock?: number;
+  descriptionFr?: string;
+  descriptionAr?: string;
+  imageUrl?: string;
+  category: string;
   sizes?: string[];
-  colorVariants?: ColorVariant[];
+  stock?: number;
+  colorVariants?: {
+    name: string;
+    nameFr?: string;
+    nameAr?: string;
+    imageUrl: string;
+  }[];
   createdAt?: any;
 }
 
